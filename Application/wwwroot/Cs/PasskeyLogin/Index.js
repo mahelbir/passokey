@@ -32,7 +32,7 @@ function login() {
             });
 
         } catch (error) {
-            resultAlert({message: "Failed to authenticate user"}, true);
+            resultAlert({message: "An error occurred while logging in"}, true);
         }
 
     }).fail(xhr => {

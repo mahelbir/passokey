@@ -1,0 +1,49 @@
+using System.Security.Cryptography;
+using System.Text.RegularExpressions;
+using Application.Persistence.Client;
+
+namespace Application.Common;
+
+public static class PasskeyHelper
+{
+    public static string GenerateClientSecretKey()
+    {
+        return Convert.ToHexString(RandomNumberGenerator.GetBytes(32)).ToLower();
+    }
+
+    public static string GetUsername(string? username)
+    {
+        if (username == null)
+        {
+            username = string.Empty;
+        }
+
+        username = Regex.Replace(username.Trim(), "[^a-zA-Z0-9]", "");
+        if (username.Length < 3 || username.Length > 50)
+        {
+            username = Convert.ToHexString(RandomNumberGenerator.GetBytes(4)).ToLower();
+        }
+
+        return username;
+    }
+
+    public static string? GetRedirectUri(ClientEntity client, string token, string? fallbackUri, string? state = "")
+    {
+        var redirectUri = string.IsNullOrEmpty(client.RedirectUri)
+            ? (string.IsNullOrEmpty(fallbackUri) ? null : fallbackUri)
+            : client.RedirectUri;
+
+        if (string.IsNullOrEmpty(redirectUri))
+        {
+            return null;
+        }
+
+        if (!Uri.TryCreate(redirectUri, UriKind.Absolute, out var uriResult) ||
+            (uriResult.Scheme != Uri.UriSchemeHttp && uriResult.Scheme != Uri.UriSchemeHttps))
+        {
+            return null;
+        }
+
+        return $"{redirectUri}?token={token}&clientId={client.Id}&state={state}";
+    }
+}

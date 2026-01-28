@@ -1,0 +1,22 @@
+@model Application.Models.PasskeyLogin.PasskeyLoginViewModel
+
+@{
+  Layout = "_AuthLayout";
+  ViewData["Title"] = "Login";
+}
+
+<div class="d-flex justify-content-center">
+  <div class="d-flex justify-content-center">
+    <button class="btn btn-passkey">
+      <i class="material-symbols-outlined">shield_person</i>
+      Login
+    </button>
+  </div>
+</div>
+
+@section Scripts {
+  <script>
+    const clientId = "@Model.ClientId";
+  </script>
+  <script type="module" src="~/Cs/PasskeyLogin/Index.js" asp-append-version="true"></script>
+}

@@ -140,7 +140,7 @@ public class PasskeyRegistrationController(
                 {
                     var exists = await userCredentialRepository.Get(c =>
                         c.CredentialId == args.CredentialId
-                    ).AnyAsync(ct);
+                    ).AsNoTracking().AnyAsync(ct);
                     return !exists;
                 }
             });

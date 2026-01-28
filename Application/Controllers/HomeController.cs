@@ -16,6 +16,20 @@ public class HomeController : Controller
         return Ok(HttpContext.Connection.RemoteIpAddress?.ToString());
     }
 
+    [Route("auth/logout/{clientId:Guid}")]
+    public IActionResult Logout(Guid clientId, string redirect = "")
+    {
+        HttpContext.Session.Remove($"authorizedClient.{clientId}.user");
+        HttpContext.Session.Remove($"authorizedClient.{clientId}.expires");
+        if (string.IsNullOrEmpty(redirect))
+        {
+            redirect = $"/auth/login/{clientId}";
+        }
+
+        // Open Redirect
+        return Redirect(redirect);
+    }
+
     [Route("Error/{statusCode}")]
     public IActionResult HttpStatusErrorCodeHandler(int statusCode)
     {

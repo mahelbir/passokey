@@ -131,7 +131,7 @@ public class PasskeyLoginController(
 
         if (storedCredential == null || storedCredential.User == null)
         {
-            return StatusCode(400, ResponseModel.Error("Bad request"));
+            return StatusCode(400, ResponseModel.Error("Passkey is not found"));
         }
 
         var user = storedCredential.User;
@@ -158,7 +158,7 @@ public class PasskeyLoginController(
         }
         catch (Fido2VerificationException)
         {
-            return StatusCode(401, ResponseModel.Error("Authentication failed, please try again", 401));
+            return StatusCode(401, ResponseModel.Error("Authentication failed", 401));
         }
 
         // Check clientId and verify user has permission

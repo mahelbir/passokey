@@ -1,0 +1,28 @@
+{
+  "BaseUrl": "http://localhost:4050",
+  "AppName": "Passokey",
+  "Session": {
+    "IdleTimeoutMinutes": 10080,
+    "AuthorizedClientLifetimeMinutes": 10080,
+    "AdminSessionLifetimeMinutes": 10080
+  },
+  "Fido2": {
+    "ServerDomain": "localhost",
+    "ServerName": "Passokey",
+    "Origins": [],
+    "TimestampDriftTolerance": 300000
+  },
+  "Jwt": {
+    "TokenLifetimeMinutes": 5
+  },
+  "ConnectionStrings": {
+    "DefaultConnection": "Data Source=App_Data/passokey.db"
+  },
+  "Logging": {
+    "LogLevel": {
+      "Default": "Information",
+      "Microsoft.AspNetCore": "Warning"
+    }
+  },
+  "AllowedHosts": "*"
+}

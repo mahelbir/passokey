@@ -1,0 +1,10 @@
+services:
+  passokey:
+    image: mahelbir/passokey:latest
+    ports:
+      - "4050:8080"
+    volumes:
+      - ./data:/app/App_Data
+    environment:
+      - ASPNETCORE_ENVIRONMENT=Production
+    restart: unless-stopped

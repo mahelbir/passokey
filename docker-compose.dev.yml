@@ -1,0 +1,12 @@
+services:
+  passokey:
+    build:
+      context: ./Application
+      dockerfile: Dockerfile
+    ports:
+      - "4050:8080"
+    volumes:
+      - ./data:/app/App_Data
+    environment:
+      - ASPNETCORE_ENVIRONMENT=Development
+    restart: unless-stopped

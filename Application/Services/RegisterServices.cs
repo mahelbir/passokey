@@ -17,6 +17,7 @@ public static class RegisterServices
         services.AddHttpContextAccessor();
         services.AddControllersWithViews();
 
+        // Session
         services.AddDistributedMemoryCache();
         services.AddSession(options =>
         {

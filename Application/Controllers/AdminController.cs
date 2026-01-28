@@ -25,6 +25,7 @@ public class AdminController(
         var result = await clientRepository
             .Get(c => c.IsAdmin)
             .Select(c => new { c.Id, PermissionCount = c.UserPermissions.Count })
+            .AsNoTracking()
             .FirstOrDefaultAsync();
 
         if (result == null)
@@ -60,7 +61,7 @@ public class AdminController(
             client = await clientRepository.Get(c =>
                 c.Id == clientId &&
                 c.IsAdmin == true
-            ).FirstOrDefaultAsync();
+            ).AsNoTracking().FirstOrDefaultAsync();
         }
 
         if (client == null)
@@ -86,4 +87,5 @@ public class AdminController(
 
         return Redirect(state);
     }
+
 }

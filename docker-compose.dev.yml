@@ -1,5 +1,6 @@
 services:
   passokey:
+    container_name: passokey
     build:
       context: ./Application
       dockerfile: Dockerfile

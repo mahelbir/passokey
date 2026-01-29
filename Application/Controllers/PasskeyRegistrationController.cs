@@ -75,6 +75,17 @@ public class PasskeyRegistrationController(
             Name = username,
             DisplayName = username
         };
+
+        // Check user existence
+        var isExists = await userRepository.IsExists(u =>
+            u.Id == new Guid(user.Id) ||
+            u.Username == user.Name
+        );
+        if (isExists)
+        {
+            return StatusCode(400, ResponseModel.Error("User already exists"));
+        }
+
         var requestNewCredentialParams = new RequestNewCredentialParams
         {
             User = user,
@@ -98,7 +109,7 @@ public class PasskeyRegistrationController(
         };
         response.StatusCode = 200;
         response.Messages.Add("Success");
-        return Json(response);
+        return StatusCode(response.StatusCode, response);
     }
 
     [HttpPost("finish/{clientId:Guid}")]
@@ -112,7 +123,7 @@ public class PasskeyRegistrationController(
         if (string.IsNullOrEmpty(challengeJson) || string.IsNullOrEmpty(sessionClientId) ||
             sessionClientId != clientId.ToString())
         {
-            return Json(ResponseModel.Error("Invalid session"));
+            return StatusCode(400, ResponseModel.Error("Session invalid or expired, please refresh the page"));
         }
 
         // Check client
@@ -123,7 +134,7 @@ public class PasskeyRegistrationController(
 
         if (client == null)
         {
-            return Json(ResponseModel.Error("Access denied", 403));
+            return StatusCode(403, ResponseModel.Error("Access denied", 403));
         }
 
         var options = CredentialCreateOptions.FromJson(challengeJson);
@@ -147,18 +158,10 @@ public class PasskeyRegistrationController(
         }
         catch (Fido2VerificationException)
         {
-            return Json(ResponseModel.Error("Registration failed"));
+            return StatusCode(401, ResponseModel.Error("Registration failed", 401));
         }
 
-        // Check user existence
-        var isExists = await userRepository.IsExists(u =>
-            u.Id == new Guid(options.User.Id) ||
-            u.Username == options.User.Name
-        );
-        if (isExists)
-        {
-            return Json(ResponseModel.Error("User already exists"));
-        }
+        /* Validate user information again or not */
 
         // Insert user
         var userId = new Guid(options.User.Id);
@@ -201,6 +204,6 @@ public class PasskeyRegistrationController(
         HttpContext.Session.Remove("fido2.registration.challenge");
         HttpContext.Session.Remove("fido2.registration.clientId");
 
-        return Json(ResponseModel.Success("Registration successful"));
+        return StatusCode(200, ResponseModel.Success("Registration successful"));
     }
 }

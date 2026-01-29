@@ -1,5 +1,5 @@
 {
-  "BaseUrl": "http://localhost:4050",
+  "BaseUrl": "https://example.com",
   "AppName": "Passokey",
   "Session": {
     "IdleTimeoutMinutes": 10080,
@@ -7,7 +7,7 @@
     "AdminSessionLifetimeMinutes": 10080
   },
   "Fido2": {
-    "ServerDomain": "localhost",
+    "ServerDomain": "example.com",
     "ServerName": "Passokey",
     "Origins": [],
     "TimestampDriftTolerance": 300000
@@ -20,8 +20,8 @@
   },
   "Logging": {
     "LogLevel": {
-      "Default": "Information",
-      "Microsoft.AspNetCore": "Warning"
+      "Default": "Error",
+      "Microsoft.AspNetCore": "Error"
     }
   },
   "AllowedHosts": "*"

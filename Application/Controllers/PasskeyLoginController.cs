@@ -103,7 +103,7 @@ public class PasskeyLoginController(
         };
         response.StatusCode = 200;
         response.Messages.Add("Success");
-        return Json(response);
+        return StatusCode(response.StatusCode, response);
     }
 
     [HttpPost("finish/{clientId:Guid}")]
@@ -124,8 +124,8 @@ public class PasskeyLoginController(
 
         // Find user and credential by credential id
         var storedCredential = await userCredentialRepository.Get(c =>
-            c.CredentialId == request.Credential.RawId
-        ).Include(c => c.User)
+                c.CredentialId == request.Credential.RawId
+            ).Include(c => c.User)
             .AsNoTracking().FirstOrDefaultAsync();
 
 
@@ -200,6 +200,6 @@ public class PasskeyLoginController(
         HttpContext.Session.SetString($"authorizedClient.{clientId}.expires", expiresAt.ToString("o"));
         HttpContext.Session.SetString($"authorizedClient.{clientId}.user", user.Id.ToString());
 
-        return Json(response);
+        return StatusCode(response.StatusCode, response);
     }
 }

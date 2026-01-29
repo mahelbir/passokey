@@ -18,8 +18,8 @@ public static class PasskeyHelper
             username = string.Empty;
         }
 
-        username = Regex.Replace(username.Trim(), "[^a-zA-Z0-9]", "");
-        if (username.Length < 3 || username.Length > 50)
+        username = Regex.Replace(username.Trim(), @"[^-a-zA-Z0-9._]", "");
+        if (username.Length < 3 || username.Length > 255)
         {
             username = Convert.ToHexString(RandomNumberGenerator.GetBytes(4)).ToLower();
         }

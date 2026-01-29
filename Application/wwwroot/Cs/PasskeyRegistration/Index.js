@@ -20,7 +20,12 @@ $('form').submit(function (event) {
                 contentType: "application/json",
                 data: JSON.stringify({credential: credential})
             }).done((finishResponse) => {
-                finishResponse.isSuccess && resultAlert(finishResponse, `/auth/login/${clientId}`);
+                if (finishResponse.isSuccess) {
+                    const loginUrl = new URL(window.location.href);
+                    loginUrl.pathname = `/auth/login/${clientId}`;
+                    loginUrl.search = window.location.search;
+                    resultAlert(finishResponse, loginUrl.toString());
+                }
             }).fail(xhr => {
                 resultAlert(xhr.responseJSON, true);
             }).always(() => {
@@ -28,11 +33,11 @@ $('form').submit(function (event) {
             });
 
         } catch (error) {
-            resultAlert({message: "Error creating credentials"}, true);
+            resultAlert({message: "Error creating credentials"});
         }
 
     }).fail(xhr => {
-        resultAlert(xhr.responseJSON, true);
+        resultAlert(xhr.responseJSON);
     }).always(() => {
         _loading.close();
     });

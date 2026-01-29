@@ -32,7 +32,7 @@ function login() {
             });
 
         } catch (error) {
-            resultAlert({message: "An error occurred while logging in"}, true);
+            resultAlert({message: "An error occurred while logging in"});
         }
 
     }).fail(xhr => {

@@ -1,5 +1,6 @@
 services:
   passokey:
+    container_name: passokey
     image: mahelbir/passokey:latest
     ports:
       - "4050:8080"

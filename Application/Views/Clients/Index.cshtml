@@ -6,7 +6,7 @@
 }
 
 <div class="d-flex justify-content-center mb-3">
-    <a href="/clients/add" class="btn btn-outline-success btn-lg">
+    <a href="/clients/create" class="btn btn-outline-success btn-lg">
         <i class="fas fa-plus"></i> Add
     </a>
 </div>
@@ -57,13 +57,14 @@
                     </td>
                     <td>
                         <div class="btn-group">
-                            <a href="/clients/update/@item.Id" class="btn btn-primary btn-sm" title="Edit">
+                            <a href="/clients/update/@item.Id" class="btn btn-info btn-sm" title="Edit">
                                 <i class="fas fa-edit"></i>
                             </a>
                             <button class="btn btn-danger btn-sm" title="Delete"
-                                    onclick="confirmLinkAlert('/clients/delete/@item.Id')">
-                                <i class="fas fa-trash"></i>
-                            </button>
+                                    onclick="confirmLinkAlert('/clients/delete/@item.Id')"
+                                    @(item.IsAdmin ? "disabled" : "") />
+                                    <i class="fas fa-trash"></i>
+
                         </div>
                     </td>
                 </tr>

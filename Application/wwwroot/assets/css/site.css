@@ -53,3 +53,7 @@
     letter-spacing: 0.1em;
     transform: scale(1);
 }
+
+th[data-sort] {
+    cursor: pointer;
+}

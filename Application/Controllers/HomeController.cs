@@ -13,7 +13,7 @@ public class HomeController : Controller
             return Redirect("/admin");
         }
 
-        return Ok(HttpContext.Connection.RemoteIpAddress?.ToString());
+        return Ok("Ok");
     }
 
     [Route("auth/logout/{clientId:Guid}")]

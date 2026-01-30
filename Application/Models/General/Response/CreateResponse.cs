@@ -5,6 +5,6 @@ public class CreateResponse<T>
     public T Id { get; set; }
 }
 
-public class CreateResponse : CreateResponse<int>
+public class CreateResponse : CreateResponse<Guid>
 {
 }

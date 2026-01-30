@@ -65,63 +65,6 @@ function confirmLinkAlert(url) {
     });
 }
 
-function resultToast(result, redirect = null) {
-    let type = "warning";
-    if (typeof result?.isSuccess === "boolean") {
-        type = result.isSuccess ? "success" : "error";
-    }
-    const text = result?.message || (result?.messages || ["Bir hata oluştu..."]).join("<br>");
-    toastr.options = {
-        "closeButton": true,
-        "debug": false,
-        "newestOnTop": true,
-        "progressBar": true,
-        "positionClass": "toast-top-center",
-        "preventDuplicates": false,
-        "onclick": null,
-        "timeOut": 2000,
-        "showEasing": "swing",
-        "hideEasing": "linear",
-        "showMethod": "fadeIn",
-        "hideMethod": "fadeOut",
-        onHidden: () => {
-            if (redirect) {
-                if (redirect === true) {
-                    return window.location.reload();
-                }
-                window.location.href = redirect;
-            }
-        }
-    }
-    toastr[type](text);
-}
-
-function infoToast(message, redirect = null) {
-    toastr.options = {
-        "closeButton": true,
-        "debug": false,
-        "newestOnTop": true,
-        "progressBar": true,
-        "positionClass": "toast-top-center",
-        "preventDuplicates": false,
-        "onclick": null,
-        "timeOut": 2000,
-        "showEasing": "swing",
-        "hideEasing": "linear",
-        "showMethod": "fadeIn",
-        "hideMethod": "fadeOut",
-        onHidden: () => {
-            if (redirect) {
-                if (redirect === true) {
-                    return window.location.reload();
-                }
-                window.location.href = redirect;
-            }
-        }
-    }
-    toastr.info(message);
-}
-
 $.ajaxSetup({crossDomain: true});
 
 $(document).ready(function () {

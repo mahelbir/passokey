@@ -29,7 +29,7 @@ public class PasskeyLoginController(
         ClientEntity? client = null;
         if (clientId != Guid.Empty)
         {
-            client = await clientRepository.GetNtById(clientId);
+            client = await clientRepository.GetById(clientId);
         }
 
         if (client == null)
@@ -78,7 +78,7 @@ public class PasskeyLoginController(
         ClientEntity? client = null;
         if (clientId != Guid.Empty)
         {
-            client = await clientRepository.GetNtById(clientId);
+            client = await clientRepository.GetById(clientId);
         }
 
         if (client == null)
@@ -165,7 +165,6 @@ public class PasskeyLoginController(
         var client = await clientRepository
             .Get(c => c.Id == clientId)
             .Include(c => c.UserPermissions.Where(p => p.UserId == user.Id))
-            .AsNoTracking()
             .FirstOrDefaultAsync();
 
         if (client == null || client.UserPermissions.Count == 0)

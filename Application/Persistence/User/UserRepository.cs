@@ -7,6 +7,6 @@ public class UserRepository(AppDbContext context) : GenericRepository<UserEntity
 {
     public Task<bool> IsExists(Expression<Func<UserEntity, bool>> predicate)
     {
-        return Get(predicate).AnyAsync();
+        return Query(predicate).AnyAsync();
     }
 }

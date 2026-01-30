@@ -123,11 +123,10 @@ public class PasskeyLoginController(
         var options = AssertionOptions.FromJson(challengeJson);
 
         // Find user and credential by credential id
-        var storedCredential = await userCredentialRepository.Get(c =>
+        var storedCredential = await userCredentialRepository.Query(c =>
                 c.CredentialId == request.Credential.RawId
             ).Include(c => c.User)
-            .AsNoTracking().FirstOrDefaultAsync();
-
+            .AsTracking().FirstOrDefaultAsync();
 
         if (storedCredential == null || storedCredential.User == null)
         {
@@ -153,7 +152,6 @@ public class PasskeyLoginController(
 
             // Update sign count
             storedCredential.SignCount = result.SignCount;
-            userCredentialRepository.Update(storedCredential);
             await unitOfWork.SaveChangesAsync();
         }
         catch (Fido2VerificationException)
@@ -163,7 +161,7 @@ public class PasskeyLoginController(
 
         // Check clientId and verify user has permission
         var client = await clientRepository
-            .Get(c => c.Id == clientId)
+            .Query(c => c.Id == clientId)
             .Include(c => c.UserPermissions.Where(p => p.UserId == user.Id))
             .FirstOrDefaultAsync();
 

@@ -23,9 +23,8 @@ public class AdminController(
     public async Task<IActionResult> Auth(string state = "/admin")
     {
         var result = await clientRepository
-            .Get(c => c.IsAdmin)
+            .Query(c => c.IsAdmin)
             .Select(c => new { c.Id, PermissionCount = c.UserPermissions.Count })
-            .AsNoTracking()
             .FirstOrDefaultAsync();
 
         if (result == null)
@@ -57,10 +56,10 @@ public class AdminController(
         ClientEntity? client = null;
         if (clientId != Guid.Empty)
         {
-            client = await clientRepository.Get(c =>
+            client = await clientRepository.Query(c =>
                 c.Id == clientId &&
                 c.IsAdmin == true
-            ).AsNoTracking().FirstOrDefaultAsync();
+            ).FirstOrDefaultAsync();
         }
 
         if (client == null)

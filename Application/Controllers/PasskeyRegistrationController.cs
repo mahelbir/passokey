@@ -138,9 +138,9 @@ public class PasskeyRegistrationController(
                 OriginalOptions = options,
                 IsCredentialIdUniqueToUserCallback = async (args, ct) =>
                 {
-                    var exists = await userCredentialRepository.Get(c =>
+                    var exists = await userCredentialRepository.Query(c =>
                         c.CredentialId == args.CredentialId
-                    ).AsNoTracking().AnyAsync(ct);
+                    ).AnyAsync(ct);
                     return !exists;
                 }
             });

@@ -1,5 +1,6 @@
 using Application.Common;
 using Application.Persistence.Client;
+using Microsoft.EntityFrameworkCore;
 
 namespace Application.Persistence;
 
@@ -17,8 +18,7 @@ public static class AppDbSeed
 
     private static async Task Clients(ClientRepository clientRepository, IConfiguration config)
     {
-        var q = clientRepository.Get(c => c.IsAdmin);
-        if (await clientRepository.Count(q) == 0)
+        if (!await clientRepository.Query(c => c.IsAdmin).AnyAsync())
         {
             var client = new ClientEntity
             {

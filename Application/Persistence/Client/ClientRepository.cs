@@ -40,6 +40,6 @@ public class ClientRepository(AppDbContext context) : GenericRepository<ClientEn
         return Get(c =>
             c.Id == id &&
             c.IsRegistrationEnabled == isRegistrationEnabled
-        ).FirstOrDefaultAsync();
+        );
     }
 }

@@ -12,7 +12,9 @@ public class GenericRepository<T>(AppDbContext context) where T : Entity
 
     public IQueryable<T> Query() => DbSet.AsQueryable();
 
-    public IQueryable<T> Get(Expression<Func<T, bool>> predicate) => DbSet.Where(predicate);
+    public IQueryable<T> Query(Expression<Func<T, bool>> predicate) => DbSet.Where(predicate);
+
+    public Task<T?> Get(Expression<Func<T, bool>> predicate) => DbSet.Where(predicate).FirstOrDefaultAsync();
 
     public Task<T?> GetById(Guid id) => DbSet.Where(e => e.Id == id).FirstOrDefaultAsync();
 

@@ -1,0 +1,80 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="utf-8">
+    <meta name="robots" content="noindex,nofollow"/>
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <meta name="theme-color" content="#0C85E1">
+    <meta name="msapplication-navbutton-color" content="#0C85E1">
+    <meta name="mobile-web-app-capable" content="yes">
+    <meta name="apple-mobile-web-app-status-bar-style" content="#0C85E1">
+    <link rel="apple-touch-icon" sizes="128x128" href="~/assets/img/logo-128.png">
+    <link rel="icon" sizes="128x128" href="~/assets/img/logo-128.png">
+    <link rel="stylesheet" type="text/css" href="https://fonts.googleapis.com/css?family=Nunito:200,200i,300,300i,400,400i,600,600i,700,700i,800,800i,900,900i" />
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.3.0/css/all.min.css">
+    <link rel="stylesheet" href="~/assets/css/bootstrap.min.css">
+    <link rel="stylesheet" href="~/assets/css/sweetalert2.min.css">
+    <link rel="stylesheet" href="~/assets/css/site.css" asp-append-version="true">
+    <title>@ViewData["Title"] | @Configuration["AppName"]</title>
+</head>
+<body class="d-flex flex-column min-vh-100">
+
+
+<nav class="navbar navbar-expand-lg navbar-dark bg-dark">
+    <a class="navbar-brand" href="/admin">@Configuration["AppName"]</a>
+    <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbar"
+            aria-controls="navbar" aria-expanded="false" aria-label="Toggle navigation">
+        <span class="navbar-toggler-icon"></span>
+    </button>
+
+    <div class="collapse navbar-collapse" id="navbar">
+        <ul class="navbar-nav mr-auto">
+            <li class="nav-item">
+                <a class="nav-link" href="/clients"><i class="fas fa-layer-group"></i> Clients</a>
+            </li>
+        </ul>
+        <ul class="navbar-nav ml-auto">
+            <li class="nav-item">
+                <a class="nav-link" href="#" data-toggle="modal" data-target="#modalLogout">
+                    <i class="fas fa-sign-out-alt"></i>
+                    <span class="d-lg-none">Logout</span>
+                </a>
+            </li>
+        </ul>
+    </div>
+</nav>
+
+<div class="container-fluid py-4">
+    @RenderBody()
+</div>
+
+<footer class="bg-secondary text-center text-lg-start mt-auto">
+    <div class="container p-2 text-center text-muted">
+        <span>@Configuration["AppName"]</span>
+    </div>
+</footer>
+
+<div class="modal fade" id="modalLogout" tabindex="-1" role="dialog" aria-labelledby="modalLogout" aria-hidden="true">
+    <div class="modal-dialog" role="document">
+        <div class="modal-content">
+            <div class="modal-body">Are you sure you want to logout?</div>
+            <div class="modal-footer">
+                <a class="btn btn-danger" href="/admin/logout">Logout</a>
+                <button class="btn btn-secondary" type="button" data-dismiss="modal">Cancel</button>
+            </div>
+        </div>
+    </div>
+</div>
+
+
+<script src="~/assets/js/jquery.min.js"></script>
+<script src="~/assets/js/bootstrap.bundle.min.js"></script>
+<script src="~/assets/js/sweetalert2.min.js"></script>
+<script src="~/assets/js/loading.js" asp-append-version="true"></script>
+<script src="~/assets/js/common.js" asp-append-version="true"></script>
+<script src="~/assets/js/site.js" asp-append-version="true"></script>
+@await RenderSectionAsync("Scripts", required: false)
+
+
+</body>
+</html>

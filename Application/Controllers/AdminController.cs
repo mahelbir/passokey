@@ -17,7 +17,7 @@ public class AdminController(
     [AdminAuthorize]
     public IActionResult Index()
     {
-        return Json(ResponseModel.Success());
+        return RedirectToAction("Index", "Clients");
     }
 
     public async Task<IActionResult> Auth(string state = "/admin")
@@ -45,7 +45,6 @@ public class AdminController(
 
         return Redirect(state);
     }
-
 
     public async Task<IActionResult> Login(Guid clientId, string token, string state = "/admin")
     {
@@ -88,4 +87,10 @@ public class AdminController(
         return Redirect(state);
     }
 
+    public IActionResult Logout()
+    {
+        var clientId = HttpContext.Session.GetString("admin.client");
+        HttpContext.Session.ClearAdminSession();
+        return Redirect($"/auth/logout/{clientId}");
+    }
 }

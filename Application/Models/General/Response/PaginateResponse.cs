@@ -10,7 +10,7 @@ public class PaginateResponse<T> : IPaginateResponse
         get => _pageNumber;
         set => _pageNumber = Math.Max(1, value);
     }
-    
+
     // Bir sayfadaki maksimum kayıt sayısı
     private int _pageSize = 25;
 
@@ -26,7 +26,14 @@ public class PaginateResponse<T> : IPaginateResponse
 
     public bool HasNext => TotalPageCount > PageNumber; // Sonraki sayfa
 
-    public int ButtonCount { get; set; } = 5; // Aynı anda gösterilecek sayfa düğmesi sayısı
+    // Gösterilecek sayfa düğmesi sayısı
+    private int _buttonCount = 5;
+
+    public int ButtonCount
+    {
+        get => _buttonCount;
+        set => _buttonCount = Math.Clamp(value, 1, 10);
+    }
 
     public int ButtonStartPage =>
         Math.Max(1, PageNumber - (ButtonCount / 2)); // Gösterilecek sayfa düğmelerinin başlangıç sayfası

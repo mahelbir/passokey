@@ -6,51 +6,62 @@ namespace Application.Persistence;
 
 public class GenericRepository<T>(AppDbContext context) where T : Entity
 {
-    protected AppDbContext Context = context;
+    protected readonly AppDbContext Context = context;
 
-    protected readonly DbSet<T> _dbSet = context.Set<T>();
+    protected readonly DbSet<T> DbSet = context.Set<T>();
 
-    public IQueryable<T> GetAll() => _dbSet.AsQueryable().AsNoTracking();
+    public IQueryable<T> Query() => DbSet.AsQueryable();
 
-    public IQueryable<T> Get(Expression<Func<T, bool>> predicate) => _dbSet.Where(predicate);
+    public IQueryable<T> Get(Expression<Func<T, bool>> predicate) => DbSet.Where(predicate);
 
-    public Task<T?> GetById(Guid id) => _dbSet.Where(e => e.Id.Equals(id)).FirstOrDefaultAsync();
-
-    public Task<T?> GetNtById(Guid id) => _dbSet.Where(e => e.Id.Equals(id)).AsNoTracking().FirstOrDefaultAsync();
+    public Task<T?> GetById(Guid id) => DbSet.Where(e => e.Id == id).FirstOrDefaultAsync();
 
     public async Task<T> Create(T entity)
     {
-        await _dbSet.AddAsync(entity);
+        await DbSet.AddAsync(entity);
         return entity;
     }
 
-    public void Update(T entity) => _dbSet.Update(entity);
+    public void Update(T entity) => DbSet.Update(entity);
 
-    public void Delete(T entity) => _dbSet.Remove(entity);
+    public void Delete(T entity) => DbSet.Remove(entity);
+
+    public Task<int> Count(
+        IQueryable<T>? query = null
+    )
+    {
+        query ??= Query();
+        return query
+            .Select(u => u.Id)
+            .CountAsync();
+    }
 
     protected Task<List<T>> GetPaginated(
         IQueryable<T> query,
-        string[] allowedFields,
         int limit,
         int offset,
-        List<SearchModel>? search = null,
-        List<SortModel>? sort = null
+        List<SortModel>? sort = null,
+        string[]? sortableFields = null
     )
     {
-        if (search != null)
-        {
-            foreach (var s in search)
-            {
-                query = QueryUtils<T>.ApplySearchFilter(query, s, allowedFields);
-            }
-        }
-
-        if (sort != null)
+        if (sort != null && sortableFields != null)
         {
             var orderedQuery = query.OrderBy(u => 0);
             foreach (var s in sort)
             {
-                orderedQuery = QueryUtils<T>.ApplySort(orderedQuery, s, allowedFields);
+                if (string.IsNullOrWhiteSpace(s.Field) || !sortableFields.Contains(s.Field))
+                {
+                    continue;
+                }
+
+                if (s.Direction == SortDirection.Asc)
+                {
+                    orderedQuery = orderedQuery.ThenBy(u => EF.Property<object>(u, s.Field));
+                }
+                else
+                {
+                    orderedQuery = orderedQuery.ThenByDescending(u => EF.Property<object>(u, s.Field));
+                }
             }
 
             query = orderedQuery;
@@ -59,26 +70,11 @@ public class GenericRepository<T>(AppDbContext context) where T : Entity
         return query
             .Skip(offset)
             .Take(limit)
-            .AsNoTracking()
             .ToListAsync();
     }
 
-    public Task<int> Count(
-        IQueryable<T> query,
-        string[]? allowedFields = null,
-        List<SearchModel>? search = null
-    )
+    protected IQueryable<T> CreatePaginationQuery(string? searchQuery = null)
     {
-        if (search != null)
-        {
-            foreach (var s in search)
-            {
-                query = QueryUtils<T>.ApplySearchFilter(query, s, allowedFields!);
-            }
-        }
-
-        return query
-            .Select(u => u.Id)
-            .CountAsync();
+        return Query();
     }
 }

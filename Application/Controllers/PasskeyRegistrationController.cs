@@ -27,10 +27,7 @@ public class PasskeyRegistrationController(
         ClientEntity? client = null;
         if (clientId != Guid.Empty)
         {
-            client = await clientRepository.Get(c =>
-                c.Id == clientId &&
-                c.IsRegistrationEnabled == true
-            ).AsNoTracking().FirstOrDefaultAsync();
+            client = await clientRepository.GetByRegistrationEnabled(clientId);
         }
 
         if (client == null)
@@ -54,10 +51,7 @@ public class PasskeyRegistrationController(
         ClientEntity? client = null;
         if (clientId != Guid.Empty)
         {
-            client = await clientRepository.Get(c =>
-                c.Id == clientId &&
-                c.IsRegistrationEnabled == true
-            ).AsNoTracking().FirstOrDefaultAsync();
+            client = await clientRepository.GetByRegistrationEnabled(clientId);
         }
 
         if (client == null)
@@ -119,7 +113,6 @@ public class PasskeyRegistrationController(
         // Check session
         var challengeJson = HttpContext.Session.GetString("fido2.registration.challenge");
         var sessionClientId = HttpContext.Session.GetString("fido2.registration.clientId");
-
         if (string.IsNullOrEmpty(challengeJson) || string.IsNullOrEmpty(sessionClientId) ||
             sessionClientId != clientId.ToString())
         {
@@ -127,11 +120,7 @@ public class PasskeyRegistrationController(
         }
 
         // Check client
-        var client = await clientRepository.Get(c =>
-            c.Id == clientId &&
-            c.IsRegistrationEnabled == true
-        ).AsNoTracking().FirstOrDefaultAsync();
-
+        var client = await clientRepository.GetByRegistrationEnabled(clientId);
         if (client == null)
         {
             return StatusCode(403, ResponseModel.Error("Access denied", 403));

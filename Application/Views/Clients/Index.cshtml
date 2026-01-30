@@ -1,0 +1,103 @@
+@model Application.Models.Client.ListClientViewModel
+
+@{
+    ViewBag.Title = "Clients";
+    Layout = "_AdminLayout";
+}
+
+<div class="d-flex justify-content-center mb-3">
+    <a href="/clients/add" class="btn btn-outline-success btn-lg">
+        <i class="fas fa-plus"></i> Add
+    </a>
+</div>
+<div class="card">
+    <div class="card-header">
+        <form action="/clients" method="get" autocomplete="off">
+            <div class="row">
+                <div class="col-md-10 form-group">
+                    <label for="search">Search</label>
+                    <input type="text" id="search" name="search" value="@Model.Request.Search" class="form-control"
+                           placeholder="ID, Name">
+                </div>
+
+                <div class="col-md-2 form-group">
+                    <label>&nbsp;</label>
+                    <button type="submit" class="btn bg-dark form-control">
+                        <i class="fas fa-filter"></i> Filter
+                    </button>
+                </div>
+            </div>
+        </form>
+    </div>
+    <div class="card-body table-responsive">
+        <table class="table table-hover">
+            <thead>
+            <tr>
+                <th>ID</th>
+                <th>Name</th>
+                <th>Registration</th>
+                <th></th>
+            </tr>
+            </thead>
+            <tbody>
+            @foreach (var item in Model.Pagination.Items)
+            {
+                <tr>
+                    <td>@item.Id</td>
+                    <td>@item.Name</td>
+                    <td>
+                        @if (item.IsRegistrationEnabled)
+                        {
+                            <span class="badge badge-success">Enabled</span>
+                        }
+                        else
+                        {
+                            <span class="badge badge-secondary">Disabled</span>
+                        }
+                    </td>
+                    <td>
+                        <div class="btn-group">
+                            <a href="/clients/update/@item.Id" class="btn btn-primary btn-sm" title="Edit">
+                                <i class="fas fa-edit"></i>
+                            </a>
+                            <button class="btn btn-danger btn-sm" title="Delete"
+                                    onclick="confirmLinkAlert('/clients/delete/@item.Id')">
+                                <i class="fas fa-trash"></i>
+                            </button>
+                        </div>
+                    </td>
+                </tr>
+            }
+            </tbody>
+        </table>
+    </div>
+    <div class="card-footer d-flex justify-content-between align-items-center">
+        <span>@Model.Pagination.Items.Count / @Model.Pagination.TotalItemCount</span>
+        <nav>
+            <ul class="pagination">
+                @if (Model.Pagination.PageNumber > 1)
+                {
+                    <li class="page-item">
+                        <a href="/clients?@Model.Request.ToString(1)" class="page-link">
+                            <i
+                                class="fas fa-angles-left"></i></a>
+                    </li>
+                }
+                @for (var pageNumber = Model.Pagination.ButtonStartPage; pageNumber <= Model.Pagination.ButtonEndPage; pageNumber++)
+                {
+                    <li class="page-item @(pageNumber == Model.Pagination.PageNumber ? "active" : "")">
+                        <a href="/clients?@Model.Request.ToString(pageNumber)" class="page-link">@pageNumber</a>
+                    </li>
+                }
+                @if (Model.Pagination.PageNumber < Model.Pagination.TotalPageCount)
+                {
+                    <li class="page-item">
+                        <a href="/clients?@Model.Request.ToString(Model.Pagination.TotalPageCount)" class="page-link">
+                            <i
+                                class="fas fa-angles-right"></i></a>
+                    </li>
+                }
+            </ul>
+        </nav>
+    </div>
+</div>

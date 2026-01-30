@@ -3,7 +3,7 @@ function resultAlert(result, redirect = null) {
     if (typeof result?.isSuccess === "boolean") {
         swalType = result.isSuccess ? "success" : "error";
     }
-    const text = result?.message || (result?.messages || ["Bir hata oluştu..."]).join("<br>");
+    const text = result?.message || (result?.messages || ["Something went wrong..."]).join("<br>");
     Swal.fire({
         icon: swalType,
         html: text,
@@ -43,7 +43,7 @@ function infoAlert(message, redirect = null) {
 
 function confirmAlert(onSuccess, onError = null, text = "") {
     Swal.fire({
-        title: 'Emin misiniz?',
+        title: 'Are you sure?',
         text: text,
         icon: 'warning',
         showCancelButton: true,

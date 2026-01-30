@@ -7,7 +7,6 @@ namespace Application.Models.Attributes;
     AllowMultiple = false)]
 public sealed class GuidDataTypeAttribute : ValidationAttribute
 {
-
     protected override ValidationResult IsValid(object? value, ValidationContext validationContext)
     {
         if (value == null || string.IsNullOrWhiteSpace(value.ToString()))
@@ -15,7 +14,7 @@ public sealed class GuidDataTypeAttribute : ValidationAttribute
             return ValidationResult.Success;
         }
 
-        if (Guid.TryParse(value.ToString(), out _))
+        if (Guid.TryParse(value.ToString(), out var parsedGuid) && parsedGuid != Guid.Empty)
         {
             return ValidationResult.Success;
         }

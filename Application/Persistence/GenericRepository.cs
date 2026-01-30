@@ -18,6 +18,8 @@ public class GenericRepository<T>(AppDbContext context) where T : Entity
 
     public Task<T?> GetById(Guid id) => DbSet.Where(e => e.Id == id).FirstOrDefaultAsync();
 
+    public Task<T?> GetTrackedById(Guid id) => DbSet.Where(e => e.Id == id).AsTracking().FirstOrDefaultAsync();
+
     public async Task<T> Create(T entity)
     {
         await DbSet.AddAsync(entity);

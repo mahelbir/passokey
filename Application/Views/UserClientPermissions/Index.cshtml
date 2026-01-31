@@ -1,0 +1,120 @@
+@model Application.Models.UserClientPermissions.ListUserClientPermissionViewModel
+
+@{
+    ViewBag.Title = $"User Client Permissions - {Model.Client.Name}";
+    Layout = "_AdminLayout";
+}
+
+<div class="d-flex justify-content-center mb-3">
+    <button class="btn btn-outline-success btn-lg" data-toggle="modal" data-target="#searchUserModal">
+        <i class="fas fa-user"></i> Add User Permission - @Model.Client.Name
+    </button>
+</div>
+<div class="card">
+    <div class="card-header">
+        <form action="/user-client-permissions/@Model.Client.Id" method="get" autocomplete="off">
+            <div class="row">
+                <div class="col-md-10 form-group">
+                    <label for="search">Search</label>
+                    <input type="text" id="search" name="search" value="@Model.Request.Search" class="form-control"
+                           placeholder="User ID, Username">
+                </div>
+
+                <div class="col-md-2 form-group">
+                    <label>&nbsp;</label>
+                    <button type="submit" class="btn bg-dark form-control">
+                        <i class="fas fa-filter"></i> Filter
+                    </button>
+                </div>
+            </div>
+        </form>
+    </div>
+    <div class="card-body table-responsive">
+        <table class="table table-hover">
+            <thead>
+            <tr>
+                <th>User ID</th>
+                <th>Username</th>
+                <th></th>
+            </tr>
+            </thead>
+            <tbody>
+            @foreach (var item in Model.Pagination.Items)
+            {
+                <tr>
+                    <td>@item.UserId</td>
+                    <td>@item.Username</td>
+                    <td>
+                        <div class="btn-group">
+                            <button class="btn btn-danger btn-sm" title="Delete"
+                                    onclick="confirmLinkAlert('/user-client-permissions/delete/@item.PermissionId')"
+                                    @(Model.Client.IsAdmin && item.UserId == Model.AdminUserId ? "disabled" : "")>
+                                <i class="fas fa-trash"></i>
+                            </button>
+                        </div>
+                    </td>
+                </tr>
+            }
+            </tbody>
+        </table>
+    </div>
+    <div class="card-footer d-flex justify-content-between align-items-center">
+        <span>@Model.Pagination.Items.Count / @Model.Pagination.TotalItemCount</span>
+        <nav>
+            <ul class="pagination">
+                @if (Model.Pagination.PageNumber > 1)
+                {
+                    <li class="page-item">
+                        <a href="/user-client-permissions/@Model.Client.Id?@Model.Request.ToString(1)" class="page-link">
+                            <i class="fas fa-angles-left"></i></a>
+                    </li>
+                }
+                @for (var pageNumber = Model.Pagination.ButtonStartPage; pageNumber <= Model.Pagination.ButtonEndPage; pageNumber++)
+                {
+                    <li class="page-item @(pageNumber == Model.Pagination.PageNumber ? "active" : "")">
+                        <a href="/user-client-permissions/@Model.Client.Id?@Model.Request.ToString(pageNumber)"
+                           class="page-link">@pageNumber</a>
+                    </li>
+                }
+                @if (Model.Pagination.PageNumber < Model.Pagination.TotalPageCount)
+                {
+                    <li class="page-item">
+                        <a href="/user-client-permissions/@Model.Client.Id?@Model.Request.ToString(Model.Pagination.TotalPageCount)"
+                           class="page-link">
+                            <i class="fas fa-angles-right"></i></a>
+                    </li>
+                }
+            </ul>
+        </nav>
+    </div>
+</div>
+
+<div class="modal fade" id="searchUserModal" tabindex="-1" role="dialog">
+    <div class="modal-dialog" role="document">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title"><i class="fas fa-search"></i> Search User</h5>
+                <button type="button" class="close" data-dismiss="modal">
+                    <span>&times;</span>
+                </button>
+            </div>
+            <form action="/users" method="get" autocomplete="off">
+                <input type="hidden" name="permission" value="@Model.Client.Id"/>
+                <div class="modal-body">
+                    <div class="form-group">
+                        <label for="modalSearch">Username / User ID</label>
+                        <input type="text" class="form-control" id="modalSearch" name="search" required=""/>
+                    </div>
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-secondary" data-dismiss="modal">Cancel</button>
+                    <button type="submit" class="btn btn-primary"><i class="fas fa-search"></i> Search</button>
+                </div>
+            </form>
+        </div>
+    </div>
+</div>
+
+@section Scripts {
+    <partial name="_CsScript"/>
+}

@@ -1,23 +1,18 @@
-@model Application.Models.Client.ListClientViewModel
+@model Application.Models.User.ListUserViewModel
 
 @{
-    ViewBag.Title = "Clients";
+    ViewBag.Title = "Users";
     Layout = "_AdminLayout";
 }
 
-<div class="d-flex justify-content-center mb-3">
-    <a href="/clients/create" class="btn btn-outline-success btn-lg">
-        <i class="fas fa-plus"></i> Add
-    </a>
-</div>
 <div class="card">
     <div class="card-header">
-        <form action="/clients" method="get" autocomplete="off">
+        <form action="/users" method="get" autocomplete="off">
             <div class="row">
                 <div class="col-md-10 form-group">
                     <label for="search">Search</label>
                     <input type="text" id="search" name="search" value="@Model.Request.Search" class="form-control"
-                           placeholder="ID, Name">
+                           placeholder="ID, Username">
                 </div>
 
                 <div class="col-md-2 form-group">
@@ -34,8 +29,7 @@
             <thead>
             <tr>
                 <th>ID</th>
-                <th>Name</th>
-                <th>Registration</th>
+                <th>Username</th>
                 <th></th>
             </tr>
             </thead>
@@ -44,31 +38,27 @@
             {
                 <tr>
                     <td>@item.Id</td>
-                    <td>@item.Name</td>
-                    <td>
-                        @if (item.IsRegistrationEnabled)
-                        {
-                            <span class="badge badge-success">Enabled</span>
-                        }
-                        else
-                        {
-                            <span class="badge badge-secondary">Disabled</span>
-                        }
-                    </td>
+                    <td>@item.Username</td>
                     <td>
                         <div class="btn-group">
-                            <a href="/user-client-permissions/@item.Id" class="btn btn-warning btn-sm"
-                               title="User Permissions">
-                                <i class="fas fa-users"></i>
-                            </a>
-                            <a href="/clients/update/@item.Id" class="btn btn-info btn-sm" title="Edit">
-                                <i class="fas fa-edit"></i>
-                            </a>
-                            <button class="btn btn-danger btn-sm" title="Delete"
-                                    onclick="confirmLinkAlert('/clients/delete/@item.Id')"
-                                    @(item.IsAdmin ? "disabled" : "")>
-                                <i class="fas fa-trash"></i>
-                            </button>
+                            @if (Model.PermissionClientId.HasValue)
+                            {
+                                <a href="/user-client-permissions/create/@Model.PermissionClientId?userId=@item.Id"
+                                   class="btn btn-info btn-sm" title="Add Permission">
+                                    <i class="fas fa-add"></i>
+                                </a>
+                            }
+                            else
+                            {
+                                <a href="/users/update/@item.Id" class="btn btn-info btn-sm" title="Edit">
+                                    <i class="fas fa-edit"></i>
+                                </a>
+                                <button class="btn btn-danger btn-sm" title="Delete"
+                                        onclick="confirmLinkAlert('/users/delete/@item.Id')"
+                                        @(item.Id == Model.AdminUserId ? "disabled" : "")>
+                                    <i class="fas fa-trash"></i>
+                                </button>
+                            }
                         </div>
                     </td>
                 </tr>
@@ -83,7 +73,7 @@
                 @if (Model.Pagination.PageNumber > 1)
                 {
                     <li class="page-item">
-                        <a href="/clients?@Model.Request.ToString(1)" class="page-link">
+                        <a href="/users?@Model.Request.ToString(1)" class="page-link">
                             <i
                                 class="fas fa-angles-left"></i></a>
                     </li>
@@ -91,13 +81,13 @@
                 @for (var pageNumber = Model.Pagination.ButtonStartPage; pageNumber <= Model.Pagination.ButtonEndPage; pageNumber++)
                 {
                     <li class="page-item @(pageNumber == Model.Pagination.PageNumber ? "active" : "")">
-                        <a href="/clients?@Model.Request.ToString(pageNumber)" class="page-link">@pageNumber</a>
+                        <a href="/users?@Model.Request.ToString(pageNumber)" class="page-link">@pageNumber</a>
                     </li>
                 }
                 @if (Model.Pagination.PageNumber < Model.Pagination.TotalPageCount)
                 {
                     <li class="page-item">
-                        <a href="/clients?@Model.Request.ToString(Model.Pagination.TotalPageCount)" class="page-link">
+                        <a href="/users?@Model.Request.ToString(Model.Pagination.TotalPageCount)" class="page-link">
                             <i
                                 class="fas fa-angles-right"></i></a>
                     </li>

@@ -1,0 +1,31 @@
+@model Application.Models.User.UpdateUserViewModel
+
+@{
+    ViewBag.Title = "Update User";
+    Layout = "_AdminLayout";
+}
+
+<div class="d-flex justify-content-center">
+    <div class="col-lg-4">
+        <div class="card">
+            <h5 class="card-header"><i class="fas fa-edit"></i> @ViewBag.Title</h5>
+            <form autocomplete="off">
+                <div class="card-body">
+                    <input type="hidden" name="id" value="@Model.User.Id"/>
+                    <div class="form-group">
+                        <label for="username">Username</label>
+                        <input type="text" class="form-control" id="username" name="username" minlength="3" maxlength="255"
+                               value="@Model.User.Username" required=""/>
+                    </div>
+                    <div class="text-center">
+                        <button class="btn btn-primary" type="submit"><i class="fas fa-save"></i> Save</button>
+                    </div>
+                </div>
+            </form>
+        </div>
+    </div>
+</div>
+
+@section Scripts {
+    <partial name="_CsScript"/>
+}

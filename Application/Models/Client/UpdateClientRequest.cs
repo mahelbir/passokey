@@ -10,7 +10,7 @@ public class UpdateClientRequest
     public Guid Id { get; set; }
 
     [MaxLength(255)]
-    [MinLength(3)]
+    [MinLength(2)]
     public string? Name { get; set; }
 
     public string? IsRegistrationEnabled { get; set; }

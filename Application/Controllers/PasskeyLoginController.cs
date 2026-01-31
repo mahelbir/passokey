@@ -61,7 +61,7 @@ public class PasskeyLoginController(
         return View(model);
     }
 
-    [Route("/auth/logout/{clientId:guid}")]
+    [HttpGet("/auth/logout/{clientId:guid}")]
     public IActionResult Logout(Guid clientId, string redirect = "")
     {
         HttpContext.Session.Remove($"authorizedClient.{clientId}.user");

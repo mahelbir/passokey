@@ -39,11 +39,32 @@ public static class AdminAuthorizationHelper
         return true;
     }
 
+    public static Guid? GetAdminUserId(this ISession session)
+    {
+        return GetGuidFromSession(session, "admin.user");
+    }
+
+    public static Guid? GetAdminClientId(this ISession session)
+    {
+        return GetGuidFromSession(session, "admin.client");
+    }
+
     public static void ClearAdminSession(this ISession session)
     {
         session.Remove("admin.client");
         session.Remove("admin.user");
         session.Remove("admin.expires");
         session.Remove("admin.userAgent");
+    }
+
+    private static Guid? GetGuidFromSession(ISession session, string key)
+    {
+        var idString = session.GetString(key);
+        if (string.IsNullOrEmpty(idString))
+        {
+            return null;
+        }
+
+        return Guid.Parse(idString);
     }
 }

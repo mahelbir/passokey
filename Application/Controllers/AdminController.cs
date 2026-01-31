@@ -88,7 +88,7 @@ public class AdminController(
 
     public IActionResult Logout()
     {
-        var clientId = HttpContext.Session.GetString("admin.client");
+        var clientId = HttpContext.Session.GetAdminClientId();
         HttpContext.Session.ClearAdminSession();
         return Redirect($"/auth/logout/{clientId}");
     }

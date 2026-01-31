@@ -1,6 +1,7 @@
 using System.Security.Cryptography;
 using System.Text.RegularExpressions;
 using Application.Persistence.Client;
+using Microsoft.AspNetCore.WebUtilities;
 
 namespace Application.Common;
 
@@ -44,6 +45,18 @@ public static class PasskeyHelper
             return null;
         }
 
-        return $"{redirectUri}?token={token}&clientId={client.Id}&state={state}";
+        var query = new Dictionary<string, string?>
+        {
+            ["token"] = token,
+            ["clientId"] = client.Id.ToString()
+        };
+
+        if (!string.IsNullOrEmpty(state))
+        {
+            query["state"] = state;
+        }
+
+        var url = QueryHelpers.AddQueryString(redirectUri, query);
+        return url;
     }
 }

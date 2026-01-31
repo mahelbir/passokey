@@ -4,10 +4,10 @@ function login() {
     _loading.open();
 
     $.post({
-        url: `/auth/login/start/${clientId}`,
+        url: `/api/auth/login/start`,
         dataType: "json",
         contentType: "application/json",
-        data: ""
+        data: JSON.stringify({clientId})
     }).done(async (startResponse) => {
 
         try {
@@ -15,10 +15,11 @@ function login() {
             _loading.open();
             const queryParams = new URLSearchParams(window.location.search);
             $.post({
-                url: `/auth/login/finish/${clientId}`,
+                url: `/api/auth/login/finish`,
                 dataType: "json",
                 contentType: "application/json",
                 data: JSON.stringify({
+                    clientId: clientId,
                     credential: credential,
                     state: queryParams.get("state") || null,
                     redirectUri: queryParams.get("redirectUri") || null

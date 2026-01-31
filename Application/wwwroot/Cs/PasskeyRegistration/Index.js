@@ -5,20 +5,26 @@ $('form').submit(function (event) {
     _loading.open();
 
     $.post({
-        url: `/auth/registration/start/${clientId}`,
+        url: `/api/auth/registration/start`,
         dataType: "json",
         contentType: "application/json",
-        data: getFormJSON(this)
+        data: JSON.stringify({
+            clientId: clientId,
+            username: $('input[name=username]').val() || null
+        })
     }).done(async (startResponse) => {
 
         try {
             const credential = await startRegistration({optionsJSON: startResponse.data.options});
             _loading.open();
             $.post({
-                url: `/auth/registration/finish/${clientId}`,
+                url: `/api/auth/registration/finish`,
                 dataType: "json",
                 contentType: "application/json",
-                data: JSON.stringify({credential: credential})
+                data: JSON.stringify({
+                    clientId: clientId,
+                    credential: credential
+                })
             }).done((finishResponse) => {
                 if (finishResponse.isSuccess) {
                     const loginUrl = new URL(window.location.href);

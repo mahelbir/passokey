@@ -39,7 +39,7 @@ public class AdminController(
 
         if (!HttpContext.IsAdminAuthorized())
         {
-            return Redirect($"/auth/login/{result.Id}?state={state}");
+            return Redirect($"/auth/login/{result.Id}?state={Uri.EscapeDataString(state)}");
         }
 
         return Redirect(state);

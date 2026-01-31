@@ -6,7 +6,7 @@ public class CreateClientRequest
 {
     [Required]
     [MaxLength(255)]
-    [MinLength(3)]
+    [MinLength(2)]
     public string Name { get; set; }
 
     public string? RedirectUri { get; set; }

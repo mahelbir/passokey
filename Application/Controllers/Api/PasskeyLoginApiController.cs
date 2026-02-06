@@ -125,7 +125,11 @@ public class PasskeyLoginApiController(
 
 
         // Create JWT token
-        var token = jwtService.CreateToken(client, user);
+        var token = jwtService.CreateToken(
+            client,
+            user,
+            PasskeyHelper.GetValidRedirectUri(client, request.RedirectUri)
+        );
         var state = request.State ?? string.Empty;
         var response = new ResponseModel<FinishPasskeyLoginResponse>
         {
@@ -134,7 +138,7 @@ public class PasskeyLoginApiController(
                 UserId = user.Id,
                 State = state,
                 Token = token,
-                Redirect = PasskeyHelper.GetRedirectUri(client, token, request.RedirectUri, state)
+                Redirect = PasskeyHelper.GetAuthenticatedRedirectUri(client, token, request.RedirectUri, state)
             },
             StatusCode = 200,
             Messages = ["Login successful"]

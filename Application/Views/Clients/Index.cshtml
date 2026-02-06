@@ -48,7 +48,7 @@
                     <td>
                         @if (item.IsRegistrationEnabled)
                         {
-                            <span class="badge badge-success">Enabled</span>
+                            <a href="/auth/registration/@item.Id" class="badge badge-success" target="_blank">Enabled</a>
                         }
                         else
                         {

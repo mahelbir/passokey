@@ -68,7 +68,7 @@ public class AdminController(
         }
 
         // Validate token
-        var principal = jwtService.ValidateToken(client, token);
+        var principal = jwtService.ValidateToken(client, token, config.GetValue<string>("BaseUrl"));
         if (principal == null)
         {
             return StatusCode(401, ResponseModel.Error("Authentication failed", 401));

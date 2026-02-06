@@ -722,3 +722,6 @@ App_Data/
 appsettings*.json
 /data/*
 !*.example
+*.db
+*.sql
+*.sqlite

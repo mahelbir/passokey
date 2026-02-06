@@ -28,19 +28,11 @@ public static class PasskeyHelper
         return username;
     }
 
-    public static string? GetRedirectUri(ClientEntity client, string token, string? fallbackUri, string? state = "")
+    public static string? GetAuthenticatedRedirectUri(ClientEntity client, string token, string? fallbackUri,
+        string? state = "")
     {
-        var redirectUri = string.IsNullOrEmpty(client.RedirectUri)
-            ? (string.IsNullOrEmpty(fallbackUri) ? null : fallbackUri)
-            : client.RedirectUri;
-
-        if (string.IsNullOrEmpty(redirectUri))
-        {
-            return null;
-        }
-
-        if (!Uri.TryCreate(redirectUri, UriKind.Absolute, out var uriResult) ||
-            (uriResult.Scheme != Uri.UriSchemeHttp && uriResult.Scheme != Uri.UriSchemeHttps))
+        var redirectUri = GetValidRedirectUri(client, fallbackUri);
+        if (redirectUri == null)
         {
             return null;
         }
@@ -58,5 +50,25 @@ public static class PasskeyHelper
 
         var url = QueryHelpers.AddQueryString(redirectUri, query);
         return url;
+    }
+
+    public static string? GetValidRedirectUri(ClientEntity client, string? fallbackUri = null)
+    {
+        var redirectUri = string.IsNullOrEmpty(client.RedirectUri)
+            ? (string.IsNullOrEmpty(fallbackUri) ? null : fallbackUri)
+            : client.RedirectUri;
+
+        if (string.IsNullOrEmpty(redirectUri))
+        {
+            return null;
+        }
+
+        var uriResult = UriHelper.ToUri(redirectUri);
+        if (uriResult == null || !uriResult.IsValidHttpUri())
+        {
+            return null;
+        }
+
+        return redirectUri;
     }
 }

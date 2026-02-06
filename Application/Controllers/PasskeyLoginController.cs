@@ -38,11 +38,12 @@ public class PasskeyLoginController(
                 if (DateTime.UtcNow < expiresAt)
                 {
                     // Create JWT token
-                    var token = jwtService.CreateToken(client, new UserEntity
-                    {
-                        Id = Guid.Parse(userIdString)
-                    });
-                    var redirect = PasskeyHelper.GetRedirectUri(client, token, redirectUri, state);
+                    var token = jwtService.CreateToken(
+                        client,
+                        new UserEntity { Id = Guid.Parse(userIdString) },
+                        PasskeyHelper.GetValidRedirectUri(client, redirectUri)
+                    );
+                    var redirect = PasskeyHelper.GetAuthenticatedRedirectUri(client, token, redirectUri, state);
                     if (!string.IsNullOrEmpty(redirect))
                     {
                         return Redirect(redirect);

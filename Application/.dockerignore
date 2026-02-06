@@ -101,4 +101,9 @@ obj/
 *.suo
 App_Data/
 appsettings*.json
-!appsettings.json.example
+/data/*
+!*.example
+*.db
+*.sql
+*.sqlite
+riderModule.iml

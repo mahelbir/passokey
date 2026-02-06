@@ -95,7 +95,9 @@ The JWT token contains:
 
 | Claim | Description |
 |-------|-------------|
+| `clientId` | The client ID (GUID) |
 | `userId` | The authenticated user's ID (GUID) |
+| `aud` | Audience - the domain extracted from redirect URI (optional) |
 | `exp` | Token expiration timestamp |
 
 ### Verifying the Token

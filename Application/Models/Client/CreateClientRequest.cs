@@ -9,5 +9,5 @@ public class CreateClientRequest
     [MinLength(2)]
     public string Name { get; set; }
 
-    public string? RedirectUri { get; set; }
+    public List<string>? RedirectUriList { get; set; }
 }

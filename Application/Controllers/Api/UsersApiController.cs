@@ -5,7 +5,7 @@ using Application.Persistence;
 using Application.Persistence.User;
 using Microsoft.AspNetCore.Mvc;
 
-namespace Application.Controllers;
+namespace Application.Controllers.Api;
 
 [Route("api/users")]
 [ApiController]

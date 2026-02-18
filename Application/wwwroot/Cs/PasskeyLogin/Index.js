@@ -33,6 +33,7 @@ function login() {
             });
 
         } catch (error) {
+            console.error(error);
             resultAlert({message: "An error occurred while logging in"});
         }
 

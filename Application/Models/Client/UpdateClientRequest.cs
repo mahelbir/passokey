@@ -15,5 +15,5 @@ public class UpdateClientRequest
 
     public string? IsRegistrationEnabled { get; set; }
 
-    public string? RedirectUri { get; set; }
+    public List<string>? RedirectUriList { get; set; }
 }

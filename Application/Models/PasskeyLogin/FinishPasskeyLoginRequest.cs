@@ -16,5 +16,5 @@ public class FinishPasskeyLoginRequest
     public string? State { get; set; }
 
     [Url]
-    public string? RedirectUri { get; set; }
+    public string RedirectUri { get; set; }
 }

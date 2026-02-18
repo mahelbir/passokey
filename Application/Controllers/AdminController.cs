@@ -24,7 +24,7 @@ public class AdminController(
     {
         var result = await clientRepository
             .Query(c => c.IsAdmin)
-            .Select(c => new { c.Id, PermissionCount = c.UserPermissions.Count })
+            .Select(c => new { c.Id, c.RedirectUriList, PermissionCount = c.UserPermissions.Count })
             .FirstOrDefaultAsync();
 
         if (result == null)
@@ -39,7 +39,9 @@ public class AdminController(
 
         if (!HttpContext.IsAdminAuthorized())
         {
-            return Redirect($"/auth/login/{result.Id}?state={Uri.EscapeDataString(state)}");
+            var redirectUri = result.RedirectUriList.First();
+            return Redirect(
+                $"/auth/login/{result.Id}?redirectUri={Uri.EscapeDataString(redirectUri)}&state={Uri.EscapeDataString(state)}");
         }
 
         return Redirect(state);
@@ -86,10 +88,15 @@ public class AdminController(
         return Redirect(state);
     }
 
-    public IActionResult Logout()
+    public async Task<IActionResult> Logout()
     {
         var clientId = HttpContext.Session.GetAdminClientId();
+        var result = await clientRepository
+            .Query(c => c.IsAdmin && c.Id == clientId)
+            .Select(c => new { c.Id, c.RedirectUriList })
+            .FirstOrDefaultAsync();
         HttpContext.Session.ClearAdminSession();
-        return Redirect($"/auth/logout/{clientId}");
+        return Redirect(
+            $"/auth/logout/{clientId}?redirectUri={Uri.EscapeDataString(result?.RedirectUriList.FirstOrDefault() ?? "")}");
     }
 }

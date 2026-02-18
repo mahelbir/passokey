@@ -28,14 +28,16 @@ public static class PasskeyHelper
         return username;
     }
 
-    public static string? GetAuthenticatedRedirectUri(ClientEntity client, string token, string? fallbackUri,
-        string? state = "")
+    public static string? GetAuthenticatedRedirectUri(this ClientEntity client, string redirectUri, string token,
+        string? state = null)
     {
-        var redirectUri = GetValidRedirectUri(client, fallbackUri);
-        if (redirectUri == null)
+        var validRedirectUri = client.GetResolvedRedirectUri(redirectUri);
+        if (validRedirectUri == null)
         {
             return null;
         }
+
+        redirectUri = validRedirectUri;
 
         var query = new Dictionary<string, string?>
         {
@@ -52,23 +54,20 @@ public static class PasskeyHelper
         return url;
     }
 
-    public static string? GetValidRedirectUri(ClientEntity client, string? fallbackUri = null)
+    public static string? GetResolvedRedirectUri(this ClientEntity client, string? redirectUri)
     {
-        var redirectUri = string.IsNullOrEmpty(client.RedirectUri)
-            ? (string.IsNullOrEmpty(fallbackUri) ? null : fallbackUri)
-            : client.RedirectUri;
-
-        if (string.IsNullOrEmpty(redirectUri))
-        {
+        if (string.IsNullOrWhiteSpace(redirectUri) ||
+            !Uri.TryCreate(redirectUri, UriKind.Absolute, out var requestedUri))
             return null;
-        }
 
-        var uriResult = UriHelper.ToUri(redirectUri);
-        if (uriResult == null || !uriResult.IsValidHttpUri())
-        {
-            return null;
-        }
-
-        return redirectUri;
+        return client.RedirectUriList
+            .Where(u => Uri.TryCreate(u, UriKind.Absolute, out _))
+            .Select(u => new Uri(u))
+            .FirstOrDefault(u => u.Scheme == requestedUri.Scheme
+                                 && u.Host == requestedUri.Host
+                                 && u.Port == requestedUri.Port
+                                 && u.AbsolutePath.TrimEnd('/') == requestedUri.AbsolutePath.TrimEnd('/'))
+            ?.ToString();
     }
+
 }

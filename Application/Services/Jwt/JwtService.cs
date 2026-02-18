@@ -23,8 +23,12 @@ public class JwtService(IConfiguration config)
         // Extract audience from redirectUri
         if (!string.IsNullOrEmpty(redirectUri))
         {
-            var uri = new Uri(redirectUri);
-            claims.Add(new Claim("aud", uri.Host));
+            redirectUri = client.GetResolvedRedirectUri(redirectUri);
+            if (redirectUri != null)
+            {
+                var uri = new Uri(redirectUri);
+                claims.Add(new Claim("aud", uri.Host));
+            }
         }
 
         var tokenData = new JwtSecurityToken(
@@ -42,7 +46,7 @@ public class JwtService(IConfiguration config)
             var uri = UriHelper.ToUri(audience);
             if (uri != null)
             {
-                audience = uri.Host;
+                audience = uri.Host; // Extract audience from redirectUri
             }
         }
 

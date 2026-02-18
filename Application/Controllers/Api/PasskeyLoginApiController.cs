@@ -10,7 +10,7 @@ using Fido2NetLib.Objects;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 
-namespace Application.Controllers;
+namespace Application.Controllers.Api;
 
 [Route("api/auth/login")]
 [ApiController]
@@ -128,7 +128,7 @@ public class PasskeyLoginApiController(
         var token = jwtService.CreateToken(
             client,
             user,
-            PasskeyHelper.GetValidRedirectUri(client, request.RedirectUri)
+            request.RedirectUri
         );
         var state = request.State ?? string.Empty;
         var response = new ResponseModel<FinishPasskeyLoginResponse>
@@ -138,7 +138,7 @@ public class PasskeyLoginApiController(
                 UserId = user.Id,
                 State = state,
                 Token = token,
-                Redirect = PasskeyHelper.GetAuthenticatedRedirectUri(client, token, request.RedirectUri, state)
+                Redirect = client.GetAuthenticatedRedirectUri(request.RedirectUri, token, state)
             },
             StatusCode = 200,
             Messages = ["Login successful"]

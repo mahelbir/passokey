@@ -34,7 +34,7 @@
 
 | Parameter | Required | Description |
 |-----------|----------|-------------|
-| `redirectUri` | No | Fallback redirect URL (used if client has no RedirectUri configured) |
+| `redirectUri` | Yes | Redirect URL to use after authentication
 | `state` | No | Arbitrary string passed back to your app after authentication |
 
 **Example:**
@@ -65,18 +65,18 @@ https://auth.example.com/auth/registration/550e8400-e29b-41d4-a716-446655440000?
 
 **Query Parameters:**
 
-| Parameter | Required | Description |
-|-----------|----------|-------------|
-| `redirect` | No | URL to redirect after logout (defaults to login page) |
+| Parameter     | Required | Description |
+|---------------|----------|-------------|
+| `redirectUri` | Yes      | Redirect URL to use after authentication |
 
 **Example:**
 ```
-https://auth.example.com/auth/logout/550e8400-e29b-41d4-a716-446655440000?redirect=https://myapp.com
+https://auth.example.com/auth/logout/550e8400-e29b-41d4-a716-446655440000?redirectUri=https://myapp.com/callback
 ```
 
 ## Callback Response
 
-After successful authentication, user is redirected to the configured `RedirectUri` with the following query parameters:
+After successful authentication, user is redirected to the matching Redirect URI with the following query parameters:
 
 | Parameter | Description |
 |-----------|-------------|
@@ -97,7 +97,7 @@ The JWT token contains:
 |-------|-------------|
 | `clientId` | The client ID (GUID) |
 | `userId` | The authenticated user's ID (GUID) |
-| `aud` | Audience - the domain extracted from redirect URI (optional) |
+| `aud` | Audience - the domain extracted from redirect URI |
 | `exp` | Token expiration timestamp |
 
 ### Verifying the Token
@@ -147,7 +147,7 @@ var userId = principal.FindFirst("userId")?.Value;
 
 ## Notes
 
-- **Redirect URI Fallback:** If a client does not have a `RedirectUri` configured in the admin panel, the `?redirectUri=` query parameter from the login request will be used as a fallback.
+- **Redirect URIs:** Each client can have multiple Redirect URIs configured in the admin panel. The `?redirectUri=` query parameter in the login request must match one of the configured URIs (compared by scheme, host, port, and path).
 
 - **User Permissions:** Users must have permission granted for the specific client to authenticate. Permissions are managed in the admin panel under "User Client Permissions".
 

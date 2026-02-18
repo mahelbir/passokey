@@ -24,7 +24,7 @@ public static class AppDbSeed
             {
                 Name = "Admin",
                 SecretKey = PasskeyHelper.GenerateClientSecretKey(),
-                RedirectUri = config["BaseUrl"] + "/admin/login",
+                RedirectUriList = [config["BaseUrl"] + "/admin/login"],
                 IsRegistrationEnabled = true,
                 IsAdmin = true
             };

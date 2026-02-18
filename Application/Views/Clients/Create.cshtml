@@ -17,8 +17,8 @@
                                required=""/>
                     </div>
                     <div class="form-group">
-                        <label for="redirectUri">Redirect URI</label>
-                        <input type="url" class="form-control" id="redirectUri" name="redirectUri"/>
+                        <label>Redirect URIs</label>
+                        <div id="redirectUriList"></div>
                     </div>
                     <div class="text-center">
                         <button class="btn btn-primary" type="submit"><i class="fas fa-save"></i> Save</button>
@@ -30,5 +30,7 @@
 </div>
 
 @section Scripts {
+    <script>const redirectUriList = [];</script>
+    <script src="~/Cs/Clients/common.js" asp-append-version="true"></script>
     <partial name="_CsScript"/>
 }

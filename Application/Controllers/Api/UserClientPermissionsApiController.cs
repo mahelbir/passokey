@@ -6,7 +6,7 @@ using Application.Persistence;
 using Application.Persistence.UserClientPermission;
 using Microsoft.AspNetCore.Mvc;
 
-namespace Application.Controllers;
+namespace Application.Controllers.Api;
 
 [Route("api/user-client-permissions")]
 [ApiController]

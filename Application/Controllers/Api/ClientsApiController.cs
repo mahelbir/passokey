@@ -7,7 +7,7 @@ using Application.Persistence;
 using Application.Persistence.Client;
 using Microsoft.AspNetCore.Mvc;
 
-namespace Application.Controllers;
+namespace Application.Controllers.Api;
 
 [Route("api/clients")]
 [ApiController]
@@ -19,23 +19,12 @@ public class ClientsApiController(ClientRepository clientRepository, UnitOfWork 
     {
         var response = new ResponseModel<CreateResponse>();
 
-        if (string.IsNullOrEmpty(request.RedirectUri))
-        {
-            request.RedirectUri = null;
-        }
-        else if (!Uri.IsWellFormedUriString(request.RedirectUri, UriKind.Absolute))
-        {
-            response.StatusCode = 400;
-            response.Messages.Add("Invalid Redirect URI");
-            return StatusCode(response.StatusCode, response);
-        }
-
         var client = new ClientEntity
         {
             Name = request.Name,
-            RedirectUri = request.RedirectUri,
             SecretKey = PasskeyHelper.GenerateClientSecretKey(),
-            IsRegistrationEnabled = true
+            IsRegistrationEnabled = true,
+            RedirectUriList = request.RedirectUriList ?? []
         };
         await clientRepository.Create(client);
         await unitOfWork.SaveChangesAsync();
@@ -67,19 +56,9 @@ public class ClientsApiController(ClientRepository clientRepository, UnitOfWork 
             client.Name = request.Name;
         }
 
-        if (request.RedirectUri != null)
+        if (request.RedirectUriList != null)
         {
-            if (string.IsNullOrEmpty(request.RedirectUri))
-            {
-                client.RedirectUri = null;
-            }
-            else if (!Uri.IsWellFormedUriString(request.RedirectUri, UriKind.Absolute))
-            {
-                response.StatusCode = 400;
-                response.Messages.Add("Invalid Redirect URI");
-                return StatusCode(response.StatusCode, response);
-            }
-            client.RedirectUri = request.RedirectUri;
+            client.RedirectUriList = request.RedirectUriList;
         }
 
         client.IsRegistrationEnabled = request.IsRegistrationEnabled == "true";

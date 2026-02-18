@@ -6,7 +6,7 @@ public class ClientEntity : Entity
 {
     public string Name { get; set; }
     public string SecretKey { get; set; }
-    public string? RedirectUri { get; set; }
+    public List<string> RedirectUriList { get; set; } = new();
     public bool IsRegistrationEnabled { get; set; }
     public bool IsAdmin { get; set; }
 

@@ -11,7 +11,7 @@ using Fido2NetLib.Objects;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 
-namespace Application.Controllers;
+namespace Application.Controllers.Api;
 
 [Route("api/auth/registration")]
 [ApiController]

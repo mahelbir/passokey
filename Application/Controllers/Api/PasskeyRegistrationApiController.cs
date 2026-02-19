@@ -28,10 +28,7 @@ public class PasskeyRegistrationApiController(
         // Check client
         var clientId = request.ClientId;
         var client = await clientRepository.GetByRegistrationEnabled(clientId);
-        if (client == null)
-        {
-            return StatusCode(403, ResponseModel.Error("Access denied", 403));
-        }
+        if (client == null) return StatusCode(403, ResponseModel.Error("Access denied", 403));
 
         var response = new ResponseModel<StartPasskeyRegistrationResponse>();
         var username = PasskeyHelper.GetUsername(request.Username);
@@ -39,9 +36,7 @@ public class PasskeyRegistrationApiController(
 
         // Check user existence
         if (await userRepository.IsExists(userId, username))
-        {
             return StatusCode(400, ResponseModel.Error("User already exists"));
-        }
 
         // Create challenge
         var user = new Fido2User
@@ -85,16 +80,11 @@ public class PasskeyRegistrationApiController(
         var sessionClientId = HttpContext.Session.GetString("fido2.registration.clientId");
         if (string.IsNullOrEmpty(challengeJson) || string.IsNullOrEmpty(sessionClientId) ||
             sessionClientId != clientId.ToString())
-        {
             return StatusCode(400, ResponseModel.Error("Session invalid or expired, please refresh the page"));
-        }
 
         // Check client
         var client = await clientRepository.GetByRegistrationEnabled(clientId);
-        if (client == null)
-        {
-            return StatusCode(403, ResponseModel.Error("Access denied", 403));
-        }
+        if (client == null) return StatusCode(403, ResponseModel.Error("Access denied", 403));
 
         var options = CredentialCreateOptions.FromJson(challengeJson);
 
@@ -125,9 +115,7 @@ public class PasskeyRegistrationApiController(
 
         // Check user existence
         if (await userRepository.IsExists(userId, username))
-        {
             return StatusCode(400, ResponseModel.Error("User already exists"));
-        }
 
         // Insert user
         var user = new UserEntity
@@ -136,7 +124,7 @@ public class PasskeyRegistrationApiController(
             Username = username,
             Credentials = new List<UserCredentialEntity>
             {
-                new UserCredentialEntity
+                new()
                 {
                     UserId = userId,
                     CredentialId = credentialResult.Id,
@@ -144,9 +132,9 @@ public class PasskeyRegistrationApiController(
                     SignCount = 0
                 }
             },
-            ClientPermissions = new List<UserClientPermissionEntity>()
+            ClientPermissions = new List<UserClientPermissionEntity>
             {
-                new UserClientPermissionEntity
+                new()
                 {
                     UserId = userId,
                     ClientId = clientId

@@ -10,14 +10,13 @@ Passokey is a self-hosted Passkey (WebAuthn/FIDO2) authentication server with mu
 - Passwordless authentication using Passkeys (WebAuthn/FIDO2)
 - Multi-client architecture with SSO support
 - Easy JWT-based integration integration with existing applications
+- Standard OpenID Connect (OIDC) integration with existing applications
 - User permission management per client
 - Admin panel for managing clients, users, and permissions
-
 
 ## 🔐 Integration
 
 The documentation is available at [docs folder](docs/INDEX.md).
-
 
 ## 🔧 How to Install
 

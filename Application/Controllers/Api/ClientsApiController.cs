@@ -5,6 +5,7 @@ using Application.Models.General;
 using Application.Models.General.Response;
 using Application.Persistence;
 using Application.Persistence.Client;
+using Application.Services.Oidc;
 using Microsoft.AspNetCore.Mvc;
 
 namespace Application.Controllers.Api;
@@ -12,7 +13,11 @@ namespace Application.Controllers.Api;
 [Route("api/clients")]
 [ApiController]
 [AdminAuthorize]
-public class ClientsApiController(ClientRepository clientRepository, UnitOfWork unitOfWork) : ControllerBase
+public class ClientsApiController(
+    ClientRepository clientRepository,
+    UnitOfWork unitOfWork,
+    OidcClientService oidcClientService
+) : ControllerBase
 {
     [HttpPost("create")]
     public async Task<IActionResult> Create(CreateClientRequest request)
@@ -28,8 +33,9 @@ public class ClientsApiController(ClientRepository clientRepository, UnitOfWork 
         };
         await clientRepository.Create(client);
         await unitOfWork.SaveChangesAsync();
+        await oidcClientService.CreateOrUpdateOidcApplication(client);
 
-        response.Data = new CreateResponse()
+        response.Data = new CreateResponse
         {
             Id = client.Id
         };
@@ -51,19 +57,15 @@ public class ClientsApiController(ClientRepository clientRepository, UnitOfWork 
             return StatusCode(response.StatusCode, response);
         }
 
-        if (!string.IsNullOrEmpty(request.Name))
-        {
-            client.Name = request.Name;
-        }
+        if (!string.IsNullOrEmpty(request.Name)) client.Name = request.Name;
 
-        if (request.RedirectUriList != null)
-        {
-            client.RedirectUriList = request.RedirectUriList;
-        }
+        if (request.RedirectUriList != null) client.RedirectUriList = request.RedirectUriList;
 
         client.IsRegistrationEnabled = request.IsRegistrationEnabled == "true";
 
         await unitOfWork.SaveChangesAsync();
+        await oidcClientService.CreateOrUpdateOidcApplication(client);
+
         response.StatusCode = 200;
         response.Messages.Add("Client updated successfully");
 

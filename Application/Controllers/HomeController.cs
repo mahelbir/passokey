@@ -8,10 +8,7 @@ public class HomeController : Controller
 {
     public IActionResult Index()
     {
-        if (HttpContext.IsAdminAuthorized())
-        {
-            return Redirect("/admin");
-        }
+        if (HttpContext.IsAdminAuthorized()) return Redirect("/admin");
 
         return Ok("Ok");
     }

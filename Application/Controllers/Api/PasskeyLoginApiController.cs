@@ -29,10 +29,7 @@ public class PasskeyLoginApiController(
         // Check client
         var clientId = request.ClientId;
         var client = await clientRepository.GetById(clientId);
-        if (client == null)
-        {
-            return StatusCode(403, ResponseModel.Error("Access denied", 403));
-        }
+        if (client == null) return StatusCode(403, ResponseModel.Error("Access denied", 403));
 
         var response = new ResponseModel<StartPasskeyLoginResponse>();
 
@@ -65,9 +62,7 @@ public class PasskeyLoginApiController(
 
         if (string.IsNullOrEmpty(challengeJson) || string.IsNullOrEmpty(sessionClientId) ||
             sessionClientId != clientId.ToString())
-        {
             return StatusCode(400, ResponseModel.Error("Session invalid or expired, please refresh the page"));
-        }
 
         var options = AssertionOptions.FromJson(challengeJson);
 
@@ -78,9 +73,7 @@ public class PasskeyLoginApiController(
             .AsTracking().FirstOrDefaultAsync();
 
         if (storedCredential == null || storedCredential.User == null)
-        {
             return StatusCode(400, ResponseModel.Error("Passkey is not found"));
-        }
 
         var user = storedCredential.User;
 
@@ -115,9 +108,7 @@ public class PasskeyLoginApiController(
             .FirstOrDefaultAsync();
 
         if (client == null || client.UserPermissions.Count == 0)
-        {
             return StatusCode(403, ResponseModel.Error("You do not have permission to access", 403));
-        }
 
         // Clear session
         HttpContext.Session.Remove("fido2.login.challenge");
@@ -138,7 +129,8 @@ public class PasskeyLoginApiController(
                 UserId = user.Id,
                 State = state,
                 Token = token,
-                Redirect = client.GetAuthenticatedRedirectUri(request.RedirectUri, token, state)
+                Redirect = UriHelper.GetLocalReturnPath(request.returnPath) ??
+                           client.GetAuthenticatedRedirectUri(request.RedirectUri, token, state)
             },
             StatusCode = 200,
             Messages = ["Login successful"]

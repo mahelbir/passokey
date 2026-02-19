@@ -10,5 +10,4 @@ public class UserClientPermissionEntity : Entity
 
     public UserEntity? User { get; set; }
     public ClientEntity? Client { get; set; }
-
 }

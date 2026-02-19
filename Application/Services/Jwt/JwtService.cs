@@ -44,10 +44,7 @@ public class JwtService(IConfiguration config)
         if (!string.IsNullOrEmpty(audience))
         {
             var uri = UriHelper.ToUri(audience);
-            if (uri != null)
-            {
-                audience = uri.Host; // Extract audience from redirectUri
-            }
+            if (uri != null) audience = uri.Host; // Extract audience from redirectUri
         }
 
         var jwtKey = new SymmetricSecurityKey(Encoding.UTF8.GetBytes(client.SecretKey));

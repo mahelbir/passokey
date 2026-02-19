@@ -5,7 +5,6 @@ namespace Application.Persistence.User;
 
 public class UserRepository(AppDbContext context) : GenericRepository<UserEntity>(context)
 {
-
     public new IQueryable<UserEntity> CreatePaginationQuery(string? search = null)
     {
         var q = Query();
@@ -13,13 +12,12 @@ public class UserRepository(AppDbContext context) : GenericRepository<UserEntity
         {
             q = q.Where(u => u.Username.ToLower().Contains(search.ToLower()));
             if (search.Length > 32 && Guid.TryParse(search, out var guid))
-            {
                 q = q.Union(Query().Where(u => u.Id == guid));
-            }
         }
 
         return q;
     }
+
     public Task<List<UserEntity>> GetPaginated(IQueryable<UserEntity> paginationQuery,
         SearchablePaginateRequest request)
     {

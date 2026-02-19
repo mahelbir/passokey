@@ -4,7 +4,7 @@ using Application.Services;
 using Microsoft.EntityFrameworkCore;
 
 var builder = WebApplication.CreateBuilder(args);
-builder.Configuration.AddJsonFile("App_Data/appsettings.json", optional: true, reloadOnChange: true);
+builder.Configuration.AddJsonFile("App_Data/appsettings.json", true, true);
 builder.Services.AddPersistence(builder.Configuration);
 builder.Services.AddRepositories(builder.Configuration);
 builder.Services.AddCoreServices(builder.Configuration);
@@ -16,6 +16,7 @@ using (var scope = app.Services.CreateScope())
     var db = scope.ServiceProvider.GetRequiredService<AppDbContext>();
     db.Database.Migrate();
 }
+
 app.SeedDatabase(builder.Configuration).Wait();
 app.UseMiddlewares(builder.Configuration, app.Environment);
 app.Run();

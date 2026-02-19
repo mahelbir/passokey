@@ -11,12 +11,8 @@ public static class ClientAuthorizationHelper
         {
             var expiresAtString = session.GetString($"authorizedClient.{client.Id}.expires");
             if (!string.IsNullOrEmpty(expiresAtString) && DateTime.TryParse(expiresAtString, out var expiresAt))
-            {
                 if (DateTime.UtcNow < expiresAt)
-                {
                     return Guid.Parse(userIdString);
-                }
-            }
         }
 
         return null;

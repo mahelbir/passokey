@@ -11,15 +11,9 @@ public class PasskeyRegistrationController(ClientRepository clientRepository) : 
     {
         // Check client
         ClientEntity? client = null;
-        if (clientId != Guid.Empty)
-        {
-            client = await clientRepository.GetByRegistrationEnabled(clientId);
-        }
+        if (clientId != Guid.Empty) client = await clientRepository.GetByRegistrationEnabled(clientId);
 
-        if (client == null)
-        {
-            return NotFound();
-        }
+        if (client == null) return NotFound();
 
         var model = new PasskeyRegistrationViewModel
         {

@@ -2,7 +2,7 @@ namespace Application.Models.General.Response;
 
 public interface IPaginateResponse
 {
-     int PageNumber { get; set; }
+    int PageNumber { get; set; }
 
     int PageSize { get; set; }
 
@@ -10,7 +10,7 @@ public interface IPaginateResponse
 
     bool HasPrevious { get; }
 
-    bool HasNext  { get; }
+    bool HasNext { get; }
 
     int ButtonCount { get; set; }
 
@@ -18,7 +18,7 @@ public interface IPaginateResponse
 
     int ButtonEndPage { get; }
 
-     int TotalPageCount { get; }
+    int TotalPageCount { get; }
 
-     int TotalItemCount { get; set; }
+    int TotalItemCount { get; set; }
 }

@@ -10,6 +10,6 @@ public class ClientEntity : Entity
     public bool IsRegistrationEnabled { get; set; }
     public bool IsAdmin { get; set; }
 
-    public ICollection<UserClientPermissionEntity> UserPermissions { get; set; } = new List<UserClientPermissionEntity>();
-
+    public ICollection<UserClientPermissionEntity> UserPermissions { get; set; } =
+        new List<UserClientPermissionEntity>();
 }

@@ -23,16 +23,10 @@ public class UserClientPermissionsController(
     public async Task<IActionResult> Create(Guid clientId, [FromQuery] Guid userId)
     {
         var client = await clientRepository.GetById(clientId);
-        if (client == null)
-        {
-            return NotFound();
-        }
+        if (client == null) return NotFound();
 
         var user = await userRepository.GetById(userId);
-        if (user == null)
-        {
-            return NotFound();
-        }
+        if (user == null) return NotFound();
 
         var model = new CreateUserClientPermissionViewModel
         {
@@ -46,10 +40,7 @@ public class UserClientPermissionsController(
     public async Task<IActionResult> Delete([FromRoute] Guid permissionId)
     {
         var permission = await userClientPermissionRepository.GetById(permissionId);
-        if (permission == null)
-        {
-            return NotFound();
-        }
+        if (permission == null) return NotFound();
 
         var clientId = permission.ClientId;
         userClientPermissionRepository.Delete(permission);
@@ -61,10 +52,7 @@ public class UserClientPermissionsController(
     public async Task<IActionResult> Index([FromRoute] Guid clientId, [FromQuery] SearchablePaginateRequest request)
     {
         var client = await clientRepository.Get(c => c.Id == clientId);
-        if (client == null)
-        {
-            return NotFound();
-        }
+        if (client == null) return NotFound();
 
         var pq = userClientPermissionRepository.CreatePaginationQuery(clientId, request.Search);
         var items = await userClientPermissionRepository.GetPaginated(pq, request);

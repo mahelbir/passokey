@@ -3,7 +3,6 @@ using Application.Persistence.Client;
 
 namespace Application.Models.Client;
 
-public class ListClientViewModel: ListViewModel<ClientEntity>
+public class ListClientViewModel : ListViewModel<ClientEntity>
 {
-
 }

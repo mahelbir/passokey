@@ -1,35 +1,31 @@
 using System.ComponentModel.DataAnnotations;
 
-namespace Application.Models.Attributes
+namespace Application.Models.Attributes;
+
+[AttributeUsage(AttributeTargets.Property | AttributeTargets.Field | AttributeTargets.Method |
+                AttributeTargets.Parameter)]
+public sealed class MinAttribute : ValidationAttribute
 {
-    [AttributeUsage(AttributeTargets.Property | AttributeTargets.Field | AttributeTargets.Method | AttributeTargets.Parameter, AllowMultiple = false)]
-    public sealed class MinAttribute : ValidationAttribute
+    private readonly double _minValue;
+
+    public MinAttribute(double minValue)
     {
-        private readonly double _minValue;
+        _minValue = minValue;
+    }
 
-        public MinAttribute(double minValue)
+    protected override ValidationResult IsValid(object? value, ValidationContext validationContext)
+    {
+        if (value == null) return ValidationResult.Success;
+
+        if (double.TryParse(value.ToString(), out var numericValue))
         {
-            _minValue = minValue;
+            if (numericValue < _minValue)
+                return new ValidationResult(
+                    $"The field {validationContext.DisplayName} must be greater than or equal to {_minValue}.");
+
+            return ValidationResult.Success;
         }
 
-        protected override ValidationResult IsValid(object? value, ValidationContext validationContext)
-        {
-            if (value == null)
-            {
-                return ValidationResult.Success;
-            }
-
-            if (double.TryParse(value.ToString(), out double numericValue))
-            {
-                if (numericValue < _minValue)
-                {
-                    return new ValidationResult($"The field {validationContext.DisplayName} must be greater than or equal to {_minValue}.");
-                }
-
-                return ValidationResult.Success;
-            }
-
-            return new ValidationResult($"The field {validationContext.DisplayName} is not a valid number.");
-        }
+        return new ValidationResult($"The field {validationContext.DisplayName} is not a valid number.");
     }
 }

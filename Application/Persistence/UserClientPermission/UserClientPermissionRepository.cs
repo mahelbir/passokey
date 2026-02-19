@@ -4,7 +4,8 @@ using Microsoft.EntityFrameworkCore;
 
 namespace Application.Persistence.UserClientPermission;
 
-public class UserClientPermissionRepository(AppDbContext context) : GenericRepository<UserClientPermissionEntity>(context)
+public class UserClientPermissionRepository(AppDbContext context)
+    : GenericRepository<UserClientPermissionEntity>(context)
 {
     public IQueryable<UserClientPermissionItem> CreatePaginationQuery(Guid clientId, string? search = null)
     {
@@ -21,7 +22,6 @@ public class UserClientPermissionRepository(AppDbContext context) : GenericRepos
         {
             q = q.Where(p => p.Username.ToLower().Contains(search.ToLower()));
             if (search.Length > 32 && Guid.TryParse(search, out var guid))
-            {
                 q = q.Union(Query(p => p.ClientId == clientId && p.UserId == guid)
                     .Include(p => p.User)
                     .Select(p => new UserClientPermissionItem
@@ -30,13 +30,13 @@ public class UserClientPermissionRepository(AppDbContext context) : GenericRepos
                         UserId = p.User!.Id,
                         Username = p.User.Username
                     }));
-            }
         }
 
         return q;
     }
 
-    public Task<List<UserClientPermissionItem>> GetPaginated(IQueryable<UserClientPermissionItem> query, SearchablePaginateRequest request)
+    public Task<List<UserClientPermissionItem>> GetPaginated(IQueryable<UserClientPermissionItem> query,
+        SearchablePaginateRequest request)
     {
         return query
             .Skip(request.Offset)
@@ -56,5 +56,4 @@ public class UserClientPermissionRepository(AppDbContext context) : GenericRepos
             p.ClientId == permission.ClientId
         ).AnyAsync();
     }
-
 }

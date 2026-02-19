@@ -1,3 +1,4 @@
+using System.Text.Json;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.ChangeTracking;
 using Microsoft.EntityFrameworkCore.Metadata.Builders;
@@ -17,8 +18,8 @@ public class ClientConfiguration : IEntityTypeConfiguration<ClientEntity>
         builder.Property(e => e.IsRegistrationEnabled).HasDefaultValue(true);
         builder.Property(e => e.IsAdmin).HasDefaultValue(false);
         builder.Property(e => e.RedirectUriList).HasConversion(
-            v => System.Text.Json.JsonSerializer.Serialize(v, (System.Text.Json.JsonSerializerOptions?)null),
-            v => System.Text.Json.JsonSerializer.Deserialize<List<string>>(v, (System.Text.Json.JsonSerializerOptions?)null) ?? new(),
+            v => JsonSerializer.Serialize(v, (JsonSerializerOptions?)null),
+            v => JsonSerializer.Deserialize<List<string>>(v, (JsonSerializerOptions?)null) ?? new List<string>(),
             new ValueComparer<List<string>>(
                 (a, b) => a != null && b != null && a.SequenceEqual(b),
                 c => c.Aggregate(0, (hash, item) => HashCode.Combine(hash, item.GetHashCode())),

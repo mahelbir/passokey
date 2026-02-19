@@ -7,17 +7,19 @@
     </PropertyGroup>
 
     <ItemGroup>
-      <PackageReference Include="Fido2.AspNet" Version="4.0.0" />
-      <PackageReference Include="Microsoft.EntityFrameworkCore.Design" Version="10.0.2">
-        <PrivateAssets>all</PrivateAssets>
-        <IncludeAssets>runtime; build; native; contentfiles; analyzers; buildtransitive</IncludeAssets>
-      </PackageReference>
-      <PackageReference Include="Microsoft.EntityFrameworkCore.Sqlite" Version="10.0.2" />
-      <PackageReference Include="System.IdentityModel.Tokens.Jwt" Version="8.15.0" />
+        <PackageReference Include="Fido2.AspNet" Version="4.0.0"/>
+        <PackageReference Include="Microsoft.EntityFrameworkCore.Design" Version="10.0.2">
+            <PrivateAssets>all</PrivateAssets>
+            <IncludeAssets>runtime; build; native; contentfiles; analyzers; buildtransitive</IncludeAssets>
+        </PackageReference>
+        <PackageReference Include="Microsoft.EntityFrameworkCore.Sqlite" Version="10.0.2"/>
+        <PackageReference Include="OpenIddict.AspNetCore" Version="6.3.0"/>
+        <PackageReference Include="OpenIddict.EntityFrameworkCore" Version="6.3.0"/>
+        <PackageReference Include="System.IdentityModel.Tokens.Jwt" Version="8.15.0"/>
     </ItemGroup>
 
     <ItemGroup>
-      <Folder Include="App_data\" />
+        <Folder Include="App_data\"/>
     </ItemGroup>
 
 </Project>

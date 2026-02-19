@@ -12,10 +12,7 @@ public class ResponseModel
         {
             StatusCode = statusCode
         };
-        if (!string.IsNullOrWhiteSpace(message))
-        {
-            response.Messages.Add(message);
-        }
+        if (!string.IsNullOrWhiteSpace(message)) response.Messages.Add(message);
         return response;
     }
 
@@ -25,10 +22,7 @@ public class ResponseModel
         {
             StatusCode = statusCode
         };
-        if (!string.IsNullOrWhiteSpace(message))
-        {
-            response.Messages.Add(message);
-        }
+        if (!string.IsNullOrWhiteSpace(message)) response.Messages.Add(message);
         return response;
     }
 }
@@ -44,10 +38,7 @@ public class ResponseModel<T> : ResponseModel
             StatusCode = statusCode,
             Data = data
         };
-        if (!string.IsNullOrWhiteSpace(message))
-        {
-            response.Messages.Add(message);
-        }
+        if (!string.IsNullOrWhiteSpace(message)) response.Messages.Add(message);
         return response;
     }
 
@@ -58,10 +49,7 @@ public class ResponseModel<T> : ResponseModel
             StatusCode = statusCode,
             Data = data
         };
-        if (!string.IsNullOrWhiteSpace(message))
-        {
-            response.Messages.Add(message);
-        }
+        if (!string.IsNullOrWhiteSpace(message)) response.Messages.Add(message);
         return response;
     }
 }

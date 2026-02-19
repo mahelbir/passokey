@@ -10,15 +10,30 @@ public class GenericRepository<T>(AppDbContext context) where T : Entity
 
     protected readonly DbSet<T> DbSet = context.Set<T>();
 
-    public IQueryable<T> Query() => DbSet.AsQueryable();
+    public IQueryable<T> Query()
+    {
+        return DbSet.AsQueryable();
+    }
 
-    public IQueryable<T> Query(Expression<Func<T, bool>> predicate) => DbSet.Where(predicate);
+    public IQueryable<T> Query(Expression<Func<T, bool>> predicate)
+    {
+        return DbSet.Where(predicate);
+    }
 
-    public Task<T?> Get(Expression<Func<T, bool>> predicate) => DbSet.Where(predicate).FirstOrDefaultAsync();
+    public Task<T?> Get(Expression<Func<T, bool>> predicate)
+    {
+        return DbSet.Where(predicate).FirstOrDefaultAsync();
+    }
 
-    public Task<T?> GetById(Guid id) => DbSet.Where(e => e.Id == id).FirstOrDefaultAsync();
+    public Task<T?> GetById(Guid id)
+    {
+        return DbSet.Where(e => e.Id == id).FirstOrDefaultAsync();
+    }
 
-    public Task<T?> GetTrackedById(Guid id) => DbSet.Where(e => e.Id == id).AsTracking().FirstOrDefaultAsync();
+    public Task<T?> GetTrackedById(Guid id)
+    {
+        return DbSet.Where(e => e.Id == id).AsTracking().FirstOrDefaultAsync();
+    }
 
     public async Task<T> Create(T entity)
     {
@@ -26,9 +41,15 @@ public class GenericRepository<T>(AppDbContext context) where T : Entity
         return entity;
     }
 
-    public void Update(T entity) => DbSet.Update(entity);
+    public void Update(T entity)
+    {
+        DbSet.Update(entity);
+    }
 
-    public void Delete(T entity) => DbSet.Remove(entity);
+    public void Delete(T entity)
+    {
+        DbSet.Remove(entity);
+    }
 
     public Task<int> Count(
         IQueryable<T>? query = null
@@ -53,19 +74,12 @@ public class GenericRepository<T>(AppDbContext context) where T : Entity
             var orderedQuery = query.OrderBy(u => 0);
             foreach (var s in sort)
             {
-                if (string.IsNullOrWhiteSpace(s.Field) || !sortableFields.Contains(s.Field))
-                {
-                    continue;
-                }
+                if (string.IsNullOrWhiteSpace(s.Field) || !sortableFields.Contains(s.Field)) continue;
 
                 if (s.Direction == SortDirection.Asc)
-                {
                     orderedQuery = orderedQuery.ThenBy(u => EF.Property<object>(u, s.Field));
-                }
                 else
-                {
                     orderedQuery = orderedQuery.ThenByDescending(u => EF.Property<object>(u, s.Field));
-                }
             }
 
             query = orderedQuery;

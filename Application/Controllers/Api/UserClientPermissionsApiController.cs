@@ -11,7 +11,9 @@ namespace Application.Controllers.Api;
 [Route("api/user-client-permissions")]
 [ApiController]
 [AdminAuthorize]
-public class UserClientPermissionsApiController(UserClientPermissionRepository userClientPermissionRepository, UnitOfWork unitOfWork) : ControllerBase
+public class UserClientPermissionsApiController(
+    UserClientPermissionRepository userClientPermissionRepository,
+    UnitOfWork unitOfWork) : ControllerBase
 {
     [HttpPost("create")]
     public async Task<IActionResult> Create(CreateUserClientPermissionRequest request)

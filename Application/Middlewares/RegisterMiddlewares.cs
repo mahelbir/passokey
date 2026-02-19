@@ -15,6 +15,7 @@ public static class RegisterMiddlewaresEx
 
         app.UseSession();
 
+        app.UseAuthentication();
         app.UseAuthorization();
 
         app.UseStatusCodePagesWithReExecute("/Error/{0}");
@@ -22,8 +23,8 @@ public static class RegisterMiddlewaresEx
         app.MapStaticAssets();
 
         app.MapControllerRoute(
-                name: "default",
-                pattern: "{controller=Home}/{action=Index}/{id?}")
+                "default",
+                "{controller=Home}/{action=Index}/{id?}")
             .WithStaticAssets();
     }
 }

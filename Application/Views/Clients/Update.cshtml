@@ -1,3 +1,4 @@
+@using System.Text.Json
 @model Application.Models.Client.UpdateClientViewModel
 
 @{
@@ -58,7 +59,7 @@
 </div>
 
 @section Scripts {
-    <script>const redirectUriList = @Html.Raw(System.Text.Json.JsonSerializer.Serialize(Model.Client.RedirectUriList));</script>
+    <script>const redirectUriList = @Html.Raw(JsonSerializer.Serialize(Model.Client.RedirectUriList));</script>
     <script src="~/Cs/Clients/common.js" asp-append-version="true"></script>
     <partial name="_CsScript"/>
 }

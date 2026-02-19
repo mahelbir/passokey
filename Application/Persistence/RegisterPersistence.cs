@@ -15,13 +15,17 @@ public static class RegisterPersistence
         services.AddScoped<UserCredentialRepository>();
         services.AddScoped<UserClientPermissionRepository>();
     }
-    
+
     public static void AddPersistence(this IServiceCollection services, IConfiguration config)
     {
-        services.AddDbContext<AppDbContext>(options => options.UseSqlite(
-            config.GetConnectionString("DefaultConnection"),
-            builder => builder.MigrationsAssembly(typeof(AppDbContext).Assembly.FullName)
-        ));
+        services.AddDbContext<AppDbContext>(options =>
+        {
+            options.UseSqlite(
+                config.GetConnectionString("DefaultConnection"),
+                builder => builder.MigrationsAssembly(typeof(AppDbContext).Assembly.FullName)
+            );
+            options.UseOpenIddict();
+        });
         services.AddScoped(typeof(GenericRepository<>));
         services.AddScoped<UnitOfWork>();
     }

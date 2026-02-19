@@ -7,12 +7,8 @@ public class SearchablePaginateRequest : SortablePaginateRequest
     public new string ToString(int pageNumber)
     {
         var str = base.ToString(pageNumber);
-        if (!string.IsNullOrEmpty(Search))
-        {
-            str += $"&search={Search}";
-        }
+        if (!string.IsNullOrEmpty(Search)) str += $"&search={Search}";
 
         return str;
     }
-
 }

@@ -1,5 +1,4 @@
 using Application.Models.General.Request;
-using Microsoft.EntityFrameworkCore;
 
 namespace Application.Persistence.Client;
 
@@ -24,11 +23,9 @@ public class ClientRepository(AppDbContext context) : GenericRepository<ClientEn
         {
             q = q.Where(c => c.Name.ToLower().Contains(search.ToLower()));
             if (search.Length > 32 && Guid.TryParse(search, out var guid))
-            {
                 q = q
                     .Union(Query()
                         .Where(c => c.Id == guid));
-            }
         }
 
         return q;

@@ -5,7 +5,5 @@ namespace Application.Models.PasskeyLogin;
 
 public class StartPasskeyLoginRequest
 {
-    [Required]
-    [GuidDataType]
-    public Guid ClientId { get; set; }
+    [Required] [GuidDataType] public Guid ClientId { get; set; }
 }

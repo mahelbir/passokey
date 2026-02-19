@@ -60,10 +60,7 @@ public static class AdminAuthorizationHelper
     private static Guid? GetGuidFromSession(ISession session, string key)
     {
         var idString = session.GetString(key);
-        if (string.IsNullOrEmpty(idString))
-        {
-            return null;
-        }
+        if (string.IsNullOrEmpty(idString)) return null;
 
         return Guid.Parse(idString);
     }

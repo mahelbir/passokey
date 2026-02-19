@@ -22,7 +22,8 @@ function login() {
                     clientId: clientId,
                     credential: credential,
                     state: queryParams.get("state") || null,
-                    redirectUri: queryParams.get("redirectUri") || null
+                    redirectUri: queryParams.get("redirectUri") || null,
+                    returnPath: queryParams.get("returnPath") || null
                 })
             }).done((finishResponse) => {
                 finishResponse.isSuccess && resultAlert(finishResponse, finishResponse.data.redirect);

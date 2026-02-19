@@ -1,5 +1,6 @@
 using Application.Models.General;
 using Application.Services.Jwt;
+using Application.Services.Oidc;
 using Microsoft.AspNetCore.Mvc;
 
 namespace Application.Services;
@@ -9,6 +10,7 @@ public static class RegisterServices
     public static void AddAppServices(this IServiceCollection services, IConfiguration config)
     {
         services.AddSingleton<JwtService>();
+        services.AddOidcServices(config);
     }
 
     public static void AddCoreServices(this IServiceCollection services, IConfiguration config)

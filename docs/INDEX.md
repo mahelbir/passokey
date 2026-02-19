@@ -1,156 +1,51 @@
-# Passokey Integration Guide
+# Integration Methods
 
-## Authentication Flow
+### 1. [Basic Integration](BASIC.md)
 
-```
-┌─────────────────┐      ┌─────────────────┐      ┌─────────────────┐
-│   Your App      │      │    Passokey     │      │   User Browser  │
-└────────┬────────┘      └────────┬────────┘      └────────┬────────┘
-         │                        │                        │
-         │  1. Redirect to login  │                        │
-         │ ───────────────────────>                        │
-         │                        │                        │
-         │                        │  2. Show passkey prompt│
-         │                        │ ───────────────────────>
-         │                        │                        │
-         │                        │  3. User authenticates │
-         │                        │ <───────────────────────
-         │                        │                        │
-         │  4. Redirect with JWT  │                        │
-         │ <───────────────────────                        │
-         │                        │                        │
-         │  5. Verify JWT token   │                        │
-         │ (using secretKey)      │                        │
-         │                        │                        │
-```
+A simple redirect-based authentication flow. Passokey authenticates the user and redirects back to your application with a signed JWT token. Your backend verifies the token using a shared secret key.
 
-## Endpoints
+**Best for:** Custom applications where you control both the frontend and backend, and want a straightforward integration without external dependencies.
 
-### Login
+### 2. [OpenID Connect Integration](OIDC.md)
 
-**URL:** `GET /auth/login/{clientId}`
+A standard OpenID Connect (OIDC) Authorization Code flow. Passokey acts as an OIDC Identity Provider, issuing standard ID tokens and access tokens. Any OIDC-compatible service can integrate without custom code.
 
-**Query Parameters:**
+**Best for:** Third-party services (Cloudflare Access, Portainer, Grafana, etc.) and applications that already support OIDC authentication.
 
-| Parameter | Required | Description |
-|-----------|----------|-------------|
-| `redirectUri` | Yes | Redirect URL to use after authentication
-| `state` | No | Arbitrary string passed back to your app after authentication |
+## Comparison
 
-**Example:**
-```
-https://auth.example.com/auth/login/550e8400-e29b-41d4-a716-446655440000?redirectUri=https://myapp.com/callback&state=%2Fadmin%2Fdashboard
-```
+| | Basic | OpenID Connect |
+|---|---|---|
+| **Protocol** | Custom JWT redirect | OIDC Authorization Code |
+| **Token Type** | HMAC-SHA256 JWT (symmetric) | RS256 JWT (asymmetric) |
+| **Token Verification** | Shared secret key on your backend | Public key via JWKS endpoint |
+| **Secret Sharing** | Secret key must be on your server | Secret only used during token exchange |
+| **3rd Party Support** | Requires manual integration | Works with any OIDC-compatible service |
+| **Standard Compliance** | Custom protocol | OpenID Connect 1.0 |
+| **Auto-Discovery** | No | `/.well-known/openid-configuration` |
+| **Setup Complexity** | Minimal | Standard OIDC configuration |
+| **UserInfo Endpoint** | Not available (all claims in JWT) | `/oidc/userinfo` |
+| **PKCE Support** | Not applicable | Supported (S256) |
 
-### Registration
+## Which One Should You Choose?
 
-**URL:** `GET /auth/registration/{clientId}`
+**Choose Basic Integration if:**
+- You are building a custom application with your own backend
+- You want the simplest possible setup
+- Your application does not support OIDC natively
 
-**Query Parameters:**
+**Choose OpenID Connect if:**
+- You are integrating with a third-party service (Cloudflare Access, Portainer, Grafana, etc.)
+- Your application already supports OIDC / OAuth 2.0 login
+- You prefer asymmetric token verification (no shared secret needed for validation)
+- You want auto-discovery of endpoints and signing keys
 
-| Parameter | Required | Description |
-|-----------|----------|-------------|
-| `username` | No | Pre-filled username for registration |
+## Common to Both Methods
 
-**Example:**
-```
-https://auth.example.com/auth/registration/550e8400-e29b-41d4-a716-446655440000?username=john
-```
+Regardless of the integration method, the following applies:
 
-> **Note:** Registration must be enabled for the client in the admin panel.
-
-### Logout
-
-**URL:** `GET /auth/logout/{clientId}`
-
-**Query Parameters:**
-
-| Parameter     | Required | Description |
-|---------------|----------|-------------|
-| `redirectUri` | Yes      | Redirect URL to use after authentication |
-
-**Example:**
-```
-https://auth.example.com/auth/logout/550e8400-e29b-41d4-a716-446655440000?redirectUri=https://myapp.com/callback
-```
-
-## Callback Response
-
-After successful authentication, user is redirected to the matching Redirect URI with the following query parameters:
-
-| Parameter | Description |
-|-----------|-------------|
-| `token` | JWT token signed with client's `secretKey` |
-| `clientId` | The client ID |
-| `state` | The state parameter (if provided in login request) |
-
-**Example callback URL:**
-```
-https://myapp.com/callback?token=eyJhbGciOiJIUzI1NiIs...&clientId=550e8400-e29b-41d4-a716-446655440000&state=%2Fadmin%2Fdashboard
-```
-
-## JWT Token
-
-The JWT token contains:
-
-| Claim | Description |
-|-------|-------------|
-| `clientId` | The client ID (GUID) |
-| `userId` | The authenticated user's ID (GUID) |
-| `aud` | Audience - the domain extracted from redirect URI |
-| `exp` | Token expiration timestamp |
-
-### Verifying the Token
-
-The token is signed using **HMAC-SHA256** with the client's `secretKey`. You must verify the token on your backend before trusting its contents.
-
-**Example (Node.js):**
-```javascript
-const jwt = require('jsonwebtoken');
-
-const secretKey = 'your-client-secret-key';
-const token = req.query.token;
-
-try {
-    const payload = jwt.verify(
-        token,
-        secretKey,
-        {
-            algorithms: ['HS256']
-        }
-    );
-  const userId = payload.userId;
-  // Create session for user
-} catch (err) {
-  // Invalid token
-}
-```
-
-**Example (C#):**
-```csharp
-var tokenHandler = new JwtSecurityTokenHandler();
-var key = Encoding.UTF8.GetBytes('your-client-secret-key');
-
-var principal = tokenHandler.ValidateToken(token, new TokenValidationParameters
-{
-    ValidateIssuer = false,
-    ValidateAudience = false,
-    ValidateLifetime = true,
-    IssuerSigningKey = new SymmetricSecurityKey(key),
-    ValidateIssuerSigningKey = true,
-    ClockSkew = TimeSpan.Zero
-}, out _);
-
-var userId = principal.FindFirst("userId")?.Value;
-// Create session for user
-```
-
-## Notes
-
-- **Redirect URIs:** Each client can have multiple Redirect URIs configured in the admin panel. The `?redirectUri=` query parameter in the login request must match one of the configured URIs (compared by scheme, host, port, and path).
-
-- **User Permissions:** Users must have permission granted for the specific client to authenticate. Permissions are managed in the admin panel under "User Client Permissions".
-
-- **SSO Behavior:** Once a user authenticates for a client, their session remains valid (based on `AuthorizedClientLifetimeMinutes` setting). Subsequent visits to the login page will automatically redirect with a new JWT token without requiring re-authentication.
-
-- **Token Lifetime:** JWT tokens have a short lifetime (configured via `TokenLifetimeMinutes`). They are meant for one-time use to establish a session on your application, not for long-term storage but you can still use them if needed.
+- **Passkey Authentication:** Users always authenticate using FIDO2/WebAuthn passkeys. No passwords are involved.
+- **User Permissions:** Users must have explicit permission for the specific client. Permissions are managed in the admin panel.
+- **SSO Sessions:** Once authenticated, the user's session is reused for subsequent requests within the configured lifetime.
+- **Redirect URIs:** Each client can have multiple Redirect URIs. The redirect URI in the request must match one of the configured URIs.
+- **Registration:** User registration can be enabled/disabled per client in the admin panel.

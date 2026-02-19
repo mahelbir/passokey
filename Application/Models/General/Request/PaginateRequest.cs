@@ -19,8 +19,7 @@ public class PaginateRequest
         set => _pageSize = Math.Clamp(value, 1, 100);
     }
 
-    [Range(1, 10)]
-    public int ButtonCount { get; set; } = 5;
+    [Range(1, 10)] public int ButtonCount { get; set; } = 5;
 
     public int Offset => (PageNumber - 1) * PageSize;
 
@@ -33,5 +32,4 @@ public class PaginateRequest
     {
         return ToString(PageNumber);
     }
-
 }

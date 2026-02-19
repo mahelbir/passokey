@@ -24,10 +24,7 @@ public class UsersApiController(UserRepository userRepository, UnitOfWork unitOf
             return StatusCode(response.StatusCode, response);
         }
 
-        if (!string.IsNullOrEmpty(request.Username))
-        {
-            user.Username = request.Username;
-        }
+        if (!string.IsNullOrEmpty(request.Username)) user.Username = request.Username;
 
         await unitOfWork.SaveChangesAsync();
         response.StatusCode = 200;

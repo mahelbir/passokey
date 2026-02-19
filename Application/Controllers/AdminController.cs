@@ -27,15 +27,9 @@ public class AdminController(
             .Select(c => new { c.Id, c.RedirectUriList, PermissionCount = c.UserPermissions.Count })
             .FirstOrDefaultAsync();
 
-        if (result == null)
-        {
-            return BadRequest("No admin client");
-        }
+        if (result == null) return BadRequest("No admin client");
 
-        if (result.PermissionCount == 0)
-        {
-            return Redirect($"/auth/registration/{result.Id}?username=admin");
-        }
+        if (result.PermissionCount == 0) return Redirect($"/auth/registration/{result.Id}?username=admin");
 
         if (!HttpContext.IsAdminAuthorized())
         {
@@ -49,32 +43,21 @@ public class AdminController(
 
     public async Task<IActionResult> Login(Guid clientId, string token, string state = "/admin")
     {
-        if (string.IsNullOrEmpty(token))
-        {
-            return StatusCode(400, ResponseModel.Error("Missing token"));
-        }
+        if (string.IsNullOrEmpty(token)) return StatusCode(400, ResponseModel.Error("Missing token"));
 
         // Check admin client
         ClientEntity? client = null;
         if (clientId != Guid.Empty)
-        {
             client = await clientRepository.Query(c =>
                 c.Id == clientId &&
                 c.IsAdmin == true
             ).FirstOrDefaultAsync();
-        }
 
-        if (client == null)
-        {
-            return StatusCode(403, ResponseModel.Error("Access denied", 403));
-        }
+        if (client == null) return StatusCode(403, ResponseModel.Error("Access denied", 403));
 
         // Validate token
         var principal = jwtService.ValidateToken(client, token, config.GetValue<string>("BaseUrl"));
-        if (principal == null)
-        {
-            return StatusCode(401, ResponseModel.Error("Authentication failed", 401));
-        }
+        if (principal == null) return StatusCode(401, ResponseModel.Error("Authentication failed", 401));
 
         // Create admin session
         var userIdString = principal.FindFirst("userId")?.Value!;

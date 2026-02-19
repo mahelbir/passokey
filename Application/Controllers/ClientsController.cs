@@ -15,9 +15,7 @@ public class ClientsController(ClientRepository clientRepository, UnitOfWork uni
     [HttpGet("create")]
     public IActionResult Create()
     {
-        var model = new CreateClientViewModel()
-        {
-        };
+        var model = new CreateClientViewModel();
         return View(model);
     }
 
@@ -25,12 +23,9 @@ public class ClientsController(ClientRepository clientRepository, UnitOfWork uni
     public async Task<IActionResult> Update([FromRoute] Guid clientId)
     {
         var client = await clientRepository.GetById(clientId);
-        if (client == null)
-        {
-            return NotFound();
-        }
+        if (client == null) return NotFound();
 
-        var model = new UpdateClientViewModel()
+        var model = new UpdateClientViewModel
         {
             Client = client
         };
@@ -41,10 +36,7 @@ public class ClientsController(ClientRepository clientRepository, UnitOfWork uni
     public async Task<IActionResult> Delete([FromRoute] Guid clientId)
     {
         var client = await clientRepository.GetById(clientId);
-        if (client == null)
-        {
-            return NotFound();
-        }
+        if (client == null) return NotFound();
         clientRepository.Delete(client);
         await unitOfWork.SaveChangesAsync();
         return Redirect("/clients");

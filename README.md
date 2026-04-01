@@ -9,7 +9,7 @@ Passokey is a self-hosted Passkey (WebAuthn/FIDO2) authentication server with mu
 
 - Passwordless authentication using Passkeys (WebAuthn/FIDO2)
 - Multi-client architecture with SSO support
-- Easy JWT-based integration integration with existing applications
+- Easy JWT-based integration with existing applications
 - Standard OpenID Connect (OIDC) integration with existing applications
 - User permission management per client
 - Admin panel for managing clients, users, and permissions
@@ -112,12 +112,12 @@ Pull the latest compose file, image and restart:
 ```bash
 curl -o docker-compose.yml https://raw.githubusercontent.com/mahelbir/passokey/main/docker-compose.yml
 docker compose pull
-docker compose up -d
+docker compose up -d --force-recreate
 ```
 
 ### 💪🏻 Non-Docker
 
-Pull repository and restart:
+Pull the latest changes and restart:
 
 ```bash
 git pull

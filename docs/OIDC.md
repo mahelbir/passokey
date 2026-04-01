@@ -4,7 +4,7 @@
 
 ```
 ┌─────────────────┐      ┌─────────────────┐      ┌─────────────────┐
-│  Service         │      │    Passokey     │      │   User Browser  │
+│  Service        │      │    Passokey     │      │   User Browser  │
 │  Provider (SP)  │      │  (OIDC Server)  │      │                 │
 └────────┬────────┘      └────────┬────────┘      └────────┬────────┘
          │                        │                        │

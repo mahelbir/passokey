@@ -36,14 +36,17 @@ function createUriRow(value, index) {
                 }));
         row.append(input).append(removeBtn);
     } else {
-        input.on('input', function () {
+        input.on('input', debounce(function () {
             if ($(this).val().trim()) {
                 const container = row.parent();
+                const val = $(this).val().trim();
                 row.remove();
-                container.append(createUriRow($(this).val().trim(), container.children().length));
-                container.append(createUriRow('', container.children().length));
+                const newFilledRow = createUriRow(val, container.children().length);
+                container.append(newFilledRow);
+                const newEmptyRow = createUriRow('', container.children().length);
+                container.append(newEmptyRow);
             }
-        });
+        }));
         row.append(input);
     }
 

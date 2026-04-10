@@ -5,6 +5,7 @@ using Microsoft.EntityFrameworkCore;
 
 var builder = WebApplication.CreateBuilder(args);
 builder.Configuration.AddJsonFile("App_Data/appsettings.json", true, true);
+builder.WebHost.UseUrls("http://*:4050");
 builder.Services.AddPersistence(builder.Configuration);
 builder.Services.AddRepositories(builder.Configuration);
 builder.Services.AddCoreServices(builder.Configuration);

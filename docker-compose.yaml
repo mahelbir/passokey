@@ -3,7 +3,7 @@ services:
     container_name: passokey
     image: mahelbir/passokey:latest
     ports:
-      - "4050:8080"
+      - "4050:4050"
     volumes:
       - ./data:/app/App_Data
     environment:

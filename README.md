@@ -1,9 +1,9 @@
 # Passokey
 
-Passokey is a self-hosted Passkey (WebAuthn/FIDO2) authentication server with multi-client SSO support.
-
 <a target="_blank" href="https://hub.docker.com/r/mahelbir/passokey"><img src="https://img.shields.io/docker/pulls/mahelbir/passokey" /></a>
 <a target="_blank" href="https://hub.docker.com/r/mahelbir/passokey"><img src="https://img.shields.io/docker/v/mahelbir/passokey?label=docker%20image%20ver." /></a>
+
+Passokey is a self-hosted Passkey (WebAuthn/FIDO2) authentication server with multi-client SSO support.
 
 ## ⭐ Features
 
@@ -18,53 +18,53 @@ Passokey is a self-hosted Passkey (WebAuthn/FIDO2) authentication server with mu
 
 The documentation is available at [docs folder](docs/INDEX.md).
 
-## 🔧 How to Install
-
-### 🐳 Docker (Recommended)
-
-```bash
-mkdir passokey && cd passokey
-mkdir data
-curl -o docker-compose.yml https://raw.githubusercontent.com/mahelbir/passokey/main/docker-compose.yml
-curl -o data/appsettings.json https://raw.githubusercontent.com/mahelbir/passokey/main/data/appsettings.json.example
-```
-
-Edit `data/appsettings.json` with your configuration:
+## ⚙️ Configuration
 
 ```json
 {
-  "BaseUrl":,
+  "BaseUrl": "",
   // Site URL (e.g., "https://auth.example.com")
-  "AppName":,
+  "AppName": "",
   // Site name displayed to users
   "Session": {
-    "IdleTimeoutMinutes":,
+    "IdleTimeoutMinutes": 0,
     // Session cleanup time after no activity
-    "AuthorizedClientLifetimeMinutes":,
+    "AuthorizedClientLifetimeMinutes": 0,
     // How long a user session remains valid after login
-    "AdminSessionLifetimeMinutes":
+    "AdminSessionLifetimeMinutes": 0
     // How long an admin session remains valid after login
   },
   "Fido2": {
-    "ServerDomain":,
+    "ServerDomain": "",
     // Your domain (e.g., "example.com")
-    "ServerName":,
+    "ServerName": "",
     // Display name shown in passkey prompt
     "Origins": [],
     // Additional allowed origins (BaseUrl is included automatically)
-    "TimestampDriftTolerance":
+    "TimestampDriftTolerance": 0
     // Allowed time difference (ms) between client and server clocks for authenticator timestamp validation
   },
   "Jwt": {
-    "TokenLifetimeMinutes":
+    "TokenLifetimeMinutes": 0
     // JWT token validity period; typically used by callback URL to create a real session
   }
 }
 ```
 
-Then start the container:
+## 🔧 How to Install
 
-```bash
+### 🐳 Docker (Recommended)
+
+Download [appsettings.json](Application/appsettings.json) to data folder and configure it, then start
+with [docker-compose.yaml](docker-compose.yaml):
+
+```
+curl -O https://raw.githubusercontent.com/mahelbir/passokey/main/docker-compose.yaml
+curl --create-dirs -o data/appsettings.json https://raw.githubusercontent.com/mahelbir/passokey/main/Application/appsettings.json
+nano data/appsettings.json
+```
+
+```
 docker compose up -d
 ```
 
@@ -77,18 +77,19 @@ Requirements:
 
 ```bash
 git clone https://github.com/mahelbir/passokey.git
-cd passokey/Application
+cd passokey
 
-# Configure appsettings.json
-cp ../data/appsettings.json.example App_Data/appsettings.json
+# Copy and configure appsettings.json
+cp Application/appsettings.json Application/appsettings.Production.json
 
-# Run the application
-dotnet run
+# Publish and run the application
+dotnet publish -c Release -o publish
+publish/Application --environment Production
 ```
 
-### 🌐 Production Deployment
+> Visit admin panel at http://localhost:4050/admin
 
-> Visit admin panel http://localhost:4050/admin
+### 🌐 Production Deployment
 
 For production environments, you should expose Passokey behind a reverse proxy with HTTPS:
 
@@ -102,26 +103,28 @@ For production environments, you should expose Passokey behind a reverse proxy w
 
 ## 🔄 How to Update
 
-Check [appsettings.json.example](data/appsettings.json.example) for any new configuration options and update your
-`App_Data/appsettings.json` accordingly.
+> Check the [Configuration](#-configuration) section for any new options and update your
+`appsettings.json` accordingly.
 
 ### 🐳 Docker
 
-Pull the latest compose file, image and restart:
+It is recommended to check the latest [docker-compose.yaml](docker-compose.yaml) for any changes before updating.
 
-```bash
-curl -o docker-compose.yml https://raw.githubusercontent.com/mahelbir/passokey/main/docker-compose.yml
+Pull the latest image and recreate:
+
+```
 docker compose pull
 docker compose up -d --force-recreate
 ```
 
 ### 💪🏻 Non-Docker
 
-Pull the latest changes and restart:
+Pull the latest changes and publish:
 
 ```bash
 git pull
-dotnet run
+dotnet publish -c Release -o publish
+publish/Application --environment Production
 ```
 
 ## 🛠️ Technology Stack

@@ -5,7 +5,7 @@ services:
       context: ./Application
       dockerfile: Dockerfile
     ports:
-      - "4050:8080"
+      - "4050:4050"
     volumes:
       - ./data:/app/App_Data
     environment:

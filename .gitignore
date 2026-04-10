@@ -720,6 +720,7 @@ Application/bin\\Debug/
 riderModule.iml
 App_Data/
 appsettings*.json
+!appsettings.json
 /data/*
 !*.example
 *.db

@@ -41,8 +41,10 @@ The documentation is available at [docs folder](docs/INDEX.md).
     // Display name shown in passkey prompt
     "Origins": [],
     // Additional allowed origins (BaseUrl is included automatically)
-    "TimestampDriftTolerance": 0
+    "TimestampDriftTolerance": 0,
     // Allowed time difference (ms) between client and server clocks for authenticator timestamp validation
+    "UserVerification": ""
+    // User verification requirement: "Required", "Preferred", or "Discouraged"
   },
   "Jwt": {
     "TokenLifetimeMinutes": 0

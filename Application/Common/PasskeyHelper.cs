@@ -1,10 +1,13 @@
 using System.Security.Cryptography;
 using System.Text.RegularExpressions;
+using Fido2NetLib.Objects;
 
 namespace Application.Common;
 
 public static class PasskeyHelper
 {
+    public static UserVerificationRequirement UserVerification { get; set; } = UserVerificationRequirement.Required;
+
     public static string GenerateClientSecretKey()
     {
         return Convert.ToHexString(RandomNumberGenerator.GetBytes(32)).ToLower();

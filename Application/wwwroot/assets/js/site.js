@@ -7,7 +7,7 @@ function resultAlert(result, redirect = null) {
     Swal.fire({
         icon: swalType,
         html: text,
-        //timer: 2000,
+        timer: 2000,
         timerProgressBar: true,
         showConfirmButton: true,
         confirmButtonText: 'OK',
@@ -26,7 +26,6 @@ function infoAlert(message, redirect = null) {
     Swal.fire({
         icon: 'info',
         html: message,
-        //timer: 2000,
         timerProgressBar: true,
         showConfirmButton: true,
         confirmButtonText: 'OK',

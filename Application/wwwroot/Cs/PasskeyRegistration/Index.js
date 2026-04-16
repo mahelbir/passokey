@@ -39,6 +39,7 @@ $('form').submit(function (event) {
             });
 
         } catch (error) {
+            console.error(error);
             resultAlert({message: "Error creating credentials"});
         }
 

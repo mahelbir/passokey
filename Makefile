@@ -1,7 +1,7 @@
 IMAGE=mahelbir/passokey
-VERSION=6.0.0
+VERSION=7.0.0
 
-test:
+dev:
 	docker compose -f docker-compose.dev.yaml up --build --force-recreate
 
 push:

@@ -1,6 +1,8 @@
+using Application.Common;
 using Application.Models.General;
 using Application.Services.Jwt;
 using Application.Services.Oidc;
+using Fido2NetLib.Objects;
 using Microsoft.AspNetCore.Mvc;
 
 namespace Application.Services;
@@ -11,6 +13,8 @@ public static class RegisterServices
     {
         services.AddSingleton<JwtService>();
         services.AddOidcServices(config);
+
+        PasskeyHelper.UserVerification = Enum.Parse<UserVerificationRequirement>(config["Fido2:UserVerification"] ?? "Required");
     }
 
     public static void AddCoreServices(this IServiceCollection services, IConfiguration config)

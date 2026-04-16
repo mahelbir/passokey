@@ -37,7 +37,7 @@ public class PasskeyLoginApiController(
         var options = fido2.GetAssertionOptions(new GetAssertionOptionsParams
         {
             AllowedCredentials = [],
-            UserVerification = UserVerificationRequirement.Discouraged
+            UserVerification = PasskeyHelper.UserVerification
         });
 
         HttpContext.Session.SetString("fido2.login.challenge", options.ToJson());
@@ -63,6 +63,10 @@ public class PasskeyLoginApiController(
         if (string.IsNullOrEmpty(challengeJson) || string.IsNullOrEmpty(sessionClientId) ||
             sessionClientId != clientId.ToString())
             return StatusCode(400, ResponseModel.Error("Session invalid or expired, please refresh the page"));
+
+        // Consume challenge immediately to prevent replay on failure
+        HttpContext.Session.Remove("fido2.login.challenge");
+        HttpContext.Session.Remove("fido2.login.clientId");
 
         var options = AssertionOptions.FromJson(challengeJson);
 
@@ -109,11 +113,6 @@ public class PasskeyLoginApiController(
 
         if (client == null || client.UserPermissions.Count == 0)
             return StatusCode(403, ResponseModel.Error("You do not have permission to access", 403));
-
-        // Clear session
-        HttpContext.Session.Remove("fido2.login.challenge");
-        HttpContext.Session.Remove("fido2.login.clientId");
-
 
         // Create JWT token
         var token = jwtService.CreateToken(

@@ -53,7 +53,7 @@ public class PasskeyRegistrationApiController(
             {
                 AuthenticatorAttachment = null,
                 ResidentKey = ResidentKeyRequirement.Required,
-                UserVerification = UserVerificationRequirement.Discouraged
+                UserVerification = PasskeyHelper.UserVerification
             },
             AttestationPreference = AttestationConveyancePreference.None
         };

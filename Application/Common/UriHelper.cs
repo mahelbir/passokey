@@ -17,7 +17,10 @@ public static class UriHelper
 
     public static string? GetLocalReturnPath(string? returnPath)
     {
-        return !string.IsNullOrEmpty(returnPath) && returnPath.StartsWith('/') ? returnPath : null;
+        if (string.IsNullOrEmpty(returnPath)) return null;
+        if (!returnPath.StartsWith('/')) return null;
+        if (returnPath.StartsWith("//") || returnPath.StartsWith("/\\")) return null;
+        return returnPath;
     }
 
     public static string? GetAuthenticatedRedirectUri(this ClientEntity client, string? redirectUri, string token,

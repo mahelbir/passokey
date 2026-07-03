@@ -1,7 +1,6 @@
 # Passokey
 
-<a target="_blank" href="https://hub.docker.com/r/mahelbir/passokey"><img src="https://img.shields.io/docker/pulls/mahelbir/passokey" /></a>
-<a target="_blank" href="https://hub.docker.com/r/mahelbir/passokey"><img src="https://img.shields.io/docker/v/mahelbir/passokey?label=docker%20image%20ver." /></a>
+[![](https://img.shields.io/docker/v/mahelbir/passokey?label=docker%20image%20ver.)](https://hub.docker.com/r/mahelbir/passokey)
 
 Passokey is a self-hosted Passkey (WebAuthn/FIDO2) authentication server with multi-client SSO support.
 
@@ -75,7 +74,6 @@ docker compose up -d
 Requirements:
 
 - [.NET 10 SDK](https://dotnet.microsoft.com/en-us/download/dotnet/10.0)
-- [Git](https://git-scm.com/downloads)
 
 ```bash
 git clone https://github.com/mahelbir/passokey.git
@@ -83,6 +81,7 @@ cd passokey
 
 # Copy and configure appsettings.json
 cp Application/appsettings.json Application/appsettings.Production.json
+nano Application/appsettings.Production.json
 
 # Publish and run the application
 dotnet publish -c Release -o publish
@@ -101,12 +100,12 @@ For production environments, you should expose Passokey behind a reverse proxy w
 - **IIS** - Windows Server with ASP.NET Core Module
 - etc.
 
-> **Important:** WebAuthn/Passkeys require HTTPS in production (except for `localhost`)
+> **Important:** WebAuthn/Passkeys require HTTPS (except for `localhost`)
 
 ## 🔄 How to Update
 
-> Check the [Configuration](#-configuration) section for any new options and update your
-`appsettings.json` accordingly.
+> Check the [Configuration](#%EF%B8%8F-configuration) section for any new options and update your
+`appsettings*.json` accordingly.
 
 ### 🐳 Docker
 
@@ -134,7 +133,7 @@ publish/Application --environment Production
 | Technology        | Purpose                                                                                                                                                               |
 |-------------------|-----------------------------------------------------------------------------------------------------------------------------------------------------------------------|
 | .NET 10           | MVC framework                                                                                                                                                         |
-| SQLite            | Database (file-based, no external dependencies)                                                                                                                       |
+| SQLite            | File-based database                                                                                                                                                   |
 | FIDO2 (WebAuthn)  | Passkey authentication via [Fido2NetLib](https://github.com/passwordless-lib/fido2-net-lib) + [SimpleWebAuthn](https://www.npmjs.com/package/@simplewebauthn/browser) |
 | JWT               | Token-based authentication for client integration                                                                                                                     |
 | In-Memory Session | Session management (non-distributed)                                                                                                                                  |
@@ -143,7 +142,6 @@ publish/Application --environment Production
 > deployments. If you need enterprise-level scalability, you can fork this project and extend it with:
 > - Distributed databases (PostgreSQL, MySQL, SQL Server)
 > - Redis or distributed cache for session management
-> - Horizontal scaling with load balancers
 > - Advanced logging and monitoring solutions
 
 ## 🖼 Screenshots
@@ -155,6 +153,11 @@ publish/Application --environment Production
 ## 🗣️ Discussion / Bug Report
 
 - [GitHub Issues](https://github.com/mahelbir/passokey/issues)
+
+## 🫶🏻 Support
+
+If this project helps you, please consider giving it a [Star ⭐️](https://github.com/mahelbir/passokey) on GitHub.
+This will encourage us to continue developing and maintaining this project.
 
 ## 📄 License
 
